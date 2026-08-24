@@ -1,6 +1,6 @@
 # Topaz SLP 2.6 Tuning Launcher v1.0.0
 
-A standalone Windows x64 launcher for reversible Topaz Video SLP 2.6 tuning, live system monitoring, completed-chunk average FPS, separate pre-processing/estimate-load timing, and rollback-safe cuDNN 9.24 management.
+A standalone Windows x64 launcher for reversible Topaz Video SLP 2.6 tuning, live system monitoring, completed-chunk average FPS, completed/total chunk and frame progress, processing elapsed/remaining estimates, separate pre-processing/estimate-load timing, and rollback-safe cuDNN 9.24 management.
 
 This is an intentionally binary-only distribution. `Topaz-SLP-Launcher.exe` contains its Python/Tcl runtime, SLP child-process hook, third-party notices, and isolated helper modes; no Python installation, ZIP extraction, or sidecar file is required.
 
@@ -8,8 +8,8 @@ This is an intentionally binary-only distribution. `Topaz-SLP-Launcher.exe` cont
 
 `Topaz-SLP-Launcher.exe`
 
-- Size: **11,910,293 bytes**
-- SHA-256: **`88B3172DA324135BD86A403D8520086329E29F858C96F44E64CC3584A0A6A46D`**
+- Size: **11,909,940 bytes**
+- SHA-256: **`F3F2FDA2078B30B2A932794B2C2F3E4F0A7E4CF74CB3BC851FE3AEA23170EF5D`**
 - Version: **1.0.0**
 - Platform: **Windows x64**
 
@@ -25,6 +25,8 @@ The executable is not Authenticode-signed. Windows SmartScreen may therefore sho
 The title-bar **X** hides the launcher in the Windows notification area. Double-click its notification icon to restore it; right-click the icon and choose **Exit** to close it.
 
 The SLP monitor uses the actual `neuroserver` runner start as the video boundary. If Topaz queues another export while the current video is still processing, that queue event will not reset the current video's pre-processing time, output format, FPS, or completed-chunk totals.
+
+**Completed chunks** and **Completed frames** now show completed/total progress for the active export. **Processing elapsed** is wall time from the first VAE encode through the most recently completed decode; it excludes estimate/load and the current partial chunk. **Estimated remaining** is a rough processing-only ETA derived from remaining unique source frames and measured completed-chunk throughput, so it updates when chunks finish and can change as the measured rate settles.
 
 Tuning settings affect only the Topaz process started by this launcher and its child processes. Closing the launcher does not revoke settings already inherited by a running Topaz process. If Topaz is later closed and restarted normally, without the launcher, those process-local tuning settings are not applied.
 
