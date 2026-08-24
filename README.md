@@ -6,12 +6,24 @@ This is an intentionally binary-only distribution. `Topaz-SLP-Launcher.exe` cont
 
 The window, taskbar button, executable, and notification area share the same high-visibility blazing Topaz icon. The title bar and taskbar now receive separate native icon frames sized to the physical monitor DPI, preventing Windows from enlarging undersized frames while preserving the crisp notification-area icon.
 
+The first launch after replacing an older copy at the same stable executable path performs a one-time Windows Shell icon refresh. This corrects Explorer if it retained the prior file icon; later launches of that unchanged build skip the refresh.
+
+## Screenshots
+
+### Settings
+
+![Topaz SLP Launcher Settings tab](https://github.com/skv89/Topaz-SLP-Launcher/releases/download/v1.0.0/Topaz-SLP-Launcher-Settings.png)
+
+### Monitor / FPS
+
+![Topaz SLP Launcher Monitor and FPS tab](https://github.com/skv89/Topaz-SLP-Launcher/releases/download/v1.0.0/Topaz-SLP-Launcher-Monitor.png)
+
 ## Download verification
 
 `Topaz-SLP-Launcher.exe`
 
-- Size: **12,090,379 bytes**
-- SHA-256: **`A10D5E755691DE45CB78864FA54B289E61F24495A67FC22C0B5B56867C0A997A`**
+- Size: **12,095,619 bytes**
+- SHA-256: **`46589108F76002C9B496D3022A3146B658AE4AE834C49E6CECCFBF55DCD8B4BC`**
 - Version: **1.0.0**
 - Platform: **Windows x64**
 
