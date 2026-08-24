@@ -4,12 +4,14 @@ A standalone Windows x64 launcher for reversible Topaz Video SLP 2.6 tuning, liv
 
 This is an intentionally binary-only distribution. `Topaz-SLP-Launcher.exe` contains its Python/Tcl runtime, SLP child-process hook, third-party notices, and isolated helper modes; no Python installation, ZIP extraction, or sidecar file is required.
 
+The window, taskbar button, executable, and notification area now share the same high-visibility blazing Topaz icon.
+
 ## Download verification
 
 `Topaz-SLP-Launcher.exe`
 
-- Size: **11,909,940 bytes**
-- SHA-256: **`F3F2FDA2078B30B2A932794B2C2F3E4F0A7E4CF74CB3BC851FE3AEA23170EF5D`**
+- Size: **12,083,608 bytes**
+- SHA-256: **`7A14FC5D7B2064E0C71BC04A9E25BEB71C62555E9C247F280BC2D11D3480FA0F`**
 - Version: **1.0.0**
 - Platform: **Windows x64**
 
