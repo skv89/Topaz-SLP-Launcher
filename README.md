@@ -8,8 +8,8 @@ This is an intentionally binary-only distribution. `Topaz-SLP-Launcher.exe` cont
 
 `Topaz-SLP-Launcher.exe`
 
-- Size: **11,909,241 bytes**
-- SHA-256: **`A212CDD9ED7CBF4DD4BEC5606D82415851EDE2DACF4ADE66361CB406C7FB05CF`**
+- Size: **11,910,293 bytes**
+- SHA-256: **`88B3172DA324135BD86A403D8520086329E29F858C96F44E64CC3584A0A6A46D`**
 - Version: **1.0.0**
 - Platform: **Windows x64**
 
@@ -23,6 +23,8 @@ The executable is not Authenticode-signed. Windows SmartScreen may therefore sho
 4. Test a short duplicate clip before unattended work.
 
 The title-bar **X** hides the launcher in the Windows notification area. Double-click its notification icon to restore it; right-click the icon and choose **Exit** to close it.
+
+The SLP monitor uses the actual `neuroserver` runner start as the video boundary. If Topaz queues another export while the current video is still processing, that queue event will not reset the current video's pre-processing time, output format, FPS, or completed-chunk totals.
 
 Tuning settings affect only the Topaz process started by this launcher and its child processes. Closing the launcher does not revoke settings already inherited by a running Topaz process. If Topaz is later closed and restarted normally, without the launcher, those process-local tuning settings are not applied.
 
