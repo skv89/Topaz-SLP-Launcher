@@ -1,4 +1,4 @@
-# Topaz SLP Tuning Launcher v1.0.2.2
+# Topaz SLP Tuning Launcher v1.0.2.3
 
 After testing nearly every AI video enhancer I could get my hands on—including precision or traditional enhancement models such as Proteus, Iris, Rhea, UniFab, Aiarty, VikPea, and Nero, and generative or diffusion restorers such as SEEDVR2, FlashVSR, SLM, SLP, and LTX-2.5 LoRA—**Topaz SLP is, to my eyes, the undisputed king of quality**. Its weakness is speed. On my workstation SLP used to be slower than SEEDVR2, the project from which it descended, so I still chose SEEDVR2 for some less-important videos. With the speed increase I now get from this launcher, I personally have no reason to fall back to SEEDVR2 or another generative/diffusion restoration model. That conclusion describes my material, standards, and hardware; it is not a promise for every system.
 
@@ -10,12 +10,18 @@ I built Topaz SLP Tuning Launcher to make that exceptional restoration quality f
 > These controls target unsupported Topaz SLP internals. My measured hardware anchor is one NVIDIA RTX PRO 6000 Blackwell workstation with 96 GB VRAM and approximately 96 GB system RAM; other RAM/VRAM cells are conservative, evidence-bounded starting estimates rather than claims that those systems were tested. Always benchmark your own output resolution and test a short duplicate clip before unattended work. This independent community tool is not endorsed by Topaz Labs or NVIDIA.
 
 > [!NOTE]
-> The v1.0.2.2 executable is not Authenticode-signed, so Windows SmartScreen may show an unknown-publisher warning. Download it only from this repository and verify the published EXE SHA-256 before running it.
+> The v1.0.2.3 executable is not Authenticode-signed, so Windows SmartScreen may show an unknown-publisher warning. Download it only from this repository and verify the published EXE SHA-256 before running it.
+
+## What v1.0.2.3 fixes
+
+- Corrects the v1.0.2.2 full-Topaz memory/OOM regression. When the DiT block and MLP fields were blank, v1.0.2.2 could remove Topaz's native worker values instead of preserving them, causing much higher dedicated-VRAM use even though the visible settings matched v1.0.0. The corrected full-launch path again matches v1.0.0 memory use and output in the controlled Stock, 241-frame, and 361-frame comparisons.
+- Fixes AutoTune rejecting every row when its prepared clip changed during the final probe/finalization interval. AutoTune now verifies geometry first and hashes only a stable finalized file while retaining the fail-closed worker integrity check.
+- Retains and revalidates the v1.0.2.1 support for Topaz model assets stored in the product's configured non-default Windows `ModelDir`.
 
 ## Screenshots
 
 > [!NOTE]
-> These are the exact author-supplied v1.0.2 development-series captures. The v1.0.2.2 controls and layout remain substantially the same, but its title bar now reads **Topaz SLP Tuning Launcher v1.0.2.2**.
+> These are the exact author-supplied v1.0.2 development-series captures. The v1.0.2.3 controls and layout remain substantially the same, but its title bar now reads **Topaz SLP Tuning Launcher v1.0.2.3**.
 
 ### Settings and cuDNN management
 
@@ -50,7 +56,7 @@ Larger or disabled spatial tiles can be slower at some output resolutions while 
 ## Start
 
 1. Download `Topaz-SLP-Launcher.exe` from the Releases page to a writable folder.
-2. Double-click `Topaz-SLP-Launcher.exe`. The filename remains stable across updates so an existing shortcut can continue to work; the GUI title bar shows **Topaz SLP Tuning Launcher v1.0.2.2**.
+2. Double-click `Topaz-SLP-Launcher.exe`. The filename remains stable across updates so an existing shortcut can continue to work; the GUI title bar shows **Topaz SLP Tuning Launcher v1.0.2.3**.
 3. Start with the immutable **Conservative Starting Point**, which selects a conservative rough 1080p recipe from both detected physical RAM and VRAM. A system with 16 GiB RAM or less now receives the exact known native SLP floor—121/21 temporal settings, 0.5 GiB cap, slice 4, and tiled 640/480 geometry—instead of being rounded up to the 24 GiB-RAM tier. Even native SLP is not guaranteed to fit once Windows, Topaz, source decoding, and background applications share that small physical pool; keep a system-managed pagefile enabled and close unnecessary applications. Run **Benchmark / System AutoTune** at the output resolutions you actually use for hardware- and resolution-specific settings. Select immutable **Stock Topaz** for a no-override run, or use **Detect & restore Topaz defaults** to load a complete verified native snapshot when one has been captured for the exact current Topaz executable and SLP module.
 4. Click **Launch Topaz**, then configure and start the SLP export normally in Topaz. Editing settings while Topaz is open enables **Apply Settings**; pressing it changes only SLP files whose runners start afterward, never the file already processing.
 
@@ -96,7 +102,7 @@ A separate, proven v1.0.1 migration defect could refresh a serialized built-in p
 
 The installed SLP 2.6 `LazyVideoReader` performs an exact decoded-frame count by calling `ffprobe -count_frames` without decoder threading. The opt-in **faster threaded SLP preflight** hook replaces only that process-local Python callable and adds `-threads auto` to the same exact count. It applies automatically to every SLP source codec launched through this application; there is no remux, prepared copy, or manual re-import. It does not edit or replace Topaz/FFmpeg files, and it falls back to the native count if the threaded probe fails. The checkbox choice remains saved across tuner launches, but it does not permanently patch Topaz or Windows and is active only in Topaz sessions launched through the tuner while selected. Once the tuner has launched Topaz, it does not need to remain running for either the applied SLP settings or this hook during that Topaz session; closing it stops live Monitor/FPS readings and OOM/stall warnings. Every later Topaz session must also be launched through the tuner, reopening the tuner first if it was closed.
 
-v1.0.2.2 also makes FFprobe discovery portable across machines. The launcher prefers a complete independent FFmpeg/FFprobe pair when one is installed, but falls back to the complete pair bundled beside the selected Topaz Video executable when the user has no separate FFmpeg installation. It gives the process-local hook the exact selected FFprobe path and places that pair's directory first only on the affected child process's `PATH`, so Topaz's compiled native fallback can resolve `ffprobe` as well. This prevents the all-row `WinError 2` / neuroserver code-7 failure seen on machines whose system `PATH` had no FFprobe, without changing the global Windows environment or any Topaz file.
+v1.0.2.2 and later also make FFprobe discovery portable across machines. The launcher prefers a complete independent FFmpeg/FFprobe pair when one is installed, but falls back to the complete pair bundled beside the selected Topaz Video executable when the user has no separate FFmpeg installation. It gives the process-local hook the exact selected FFprobe path and places that pair's directory first only on the affected child process's `PATH`, so Topaz's compiled native fallback can resolve `ffprobe` as well. This prevents the all-row `WinError 2` / neuroserver code-7 failure seen on machines whose system `PATH` had no FFprobe, without changing the global Windows environment or any Topaz file.
 
 The installed function's exact unthreaded command was captured from the compiled SLP module. On the 804-frame FFV1 test file, the process-local threaded path returned the same 804 frames in 6.632 seconds; the equivalent unthreaded count was roughly 80 seconds. Other codecs use the same hook but had much smaller baseline count times. The earlier “full decode to null” comparison was diagnostic evidence, not a Topaz command-line switch. This option accelerates the SLP runner's frame-count preflight, not Topaz GUI import or model loading. After changing it, click **Apply Settings**, fully close Topaz Video, and use **Launch Topaz** in the tuner.
 
