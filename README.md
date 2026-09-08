@@ -1,4 +1,4 @@
-# Topaz SLP Tuning Launcher v1.0.3
+# Topaz SLP Tuning Launcher v1.0.3.1
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
@@ -6,11 +6,9 @@ Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory
 
 ## What is new
 
-- A simpler, compact interface that opens maximized on Settings.
-- Automatic tuning compatibility setup and clearer hover help.
-- Live graphs with synchronized time zoom, memory peaks and processing phases.
-- Fresh AutoTune runs, editable test suites and a simpler history/cleanup window.
-- Fixes for launcher memory growth, popup stability, saved results and report layout.
+- Finds FFmpeg and FFprobe placed beside the launcher EXE, even if you rename the launcher.
+- Fixes detection of valid media tools stored on another drive.
+- Gives clearer instructions if either tool is missing.
 
 ## Getting started
 
@@ -32,7 +30,7 @@ Screenshots show one example computer, not recommended settings for every GPU.
 
 Open **Benchmark / System AutoTune**, choose your output resolution and **Standard** mode, then click **Create / refresh plan**. Add, edit or remove setting tests if desired and save your suite. Prepare the selected runtimes if prompted, then start AutoTune.
 
-Leave Topaz open and idle, disconnect from the internet, keep the hardware running cool by leaving open windows, using AC, or running with an open case, and avoid using the computer during AutoTune as I found even light work such as typing documents or web browsing without videos can affect the performance significantly. Keep in mind each AutoTune row tests a single isolated parameter tweak that might result in a few percentage point of performance difference; but if outside factors distorts the performance by a few percent, then the AutoTune results might not be reliable or useful. Saved tables remain available for reference; they do not resume processing.
+Leave Topaz open and idle, disconnect from the internet, keep the hardware running cool by leaving open windows, using AC, or running with an open case, and avoid using the computer during AutoTune as I found even light computer use such as typing documents or web browsing without videos can affect the performance significantly. Keep in mind each AutoTune row tests a single isolated parameter tweak that might result in a few percentage point of performance difference; but if outside factors distorts the performance by a few percent, then the AutoTune results might not be reliable or useful. Saved tables remain available for reference; they do not resume processing.
 
 ![AutoTune test plan](docs/screenshots/benchmark-plan.png)
 
@@ -73,7 +71,7 @@ Hover over controls and dropdown options for explanations. **Guide** provides st
 
 ![Starting guide](docs/screenshots/guide.png)
 
-Requires **Windows x64**, a supported **Topaz Video installation with SLP 2.6**, and an **NVIDIA CUDA GPU**. No Python installation is needed. AutoTune and optional faster preflight require both FFmpeg and FFprobe; the selected Topaz installation should already provide them. New cuDNN downloads require accepting NVIDIA's license.
+Requires **Windows x64**, a supported **Topaz Video installation with SLP 2.6**, and an **NVIDIA CUDA GPU**. No Python installation is needed. AutoTune and optional faster preflight require both FFmpeg and FFprobe; the selected Topaz installation should already provide them. You can also place **ffmpeg.exe** and **ffprobe.exe** together beside the launcher EXE (or in its **bin**, **ffmpeg**, or **ffmpeg/bin** subfolder). No system settings need to be changed. New cuDNN downloads require accepting NVIDIA's license.
 
 **Important:** tuning is experimental. Settings that fit a 96-GB workstation may not fit a 16-GB GPU/32-GB RAM computer. Larger chunks, tiles and batches—or an uncapped VAE—can greatly increase memory use. Safety guards cannot prevent every OOM or driver failure. 
 
