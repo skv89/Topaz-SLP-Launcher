@@ -1,17 +1,17 @@
-# Topaz SLP Tuning Launcher v1.0.3.2
+# Topaz SLP Tuning Launcher v1.0.3.3
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Download](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## What is new
+## What is new in v1.0.3.3
 
-- AutoTune searches combinations from successful setting tests for the highest predicted speed within each preset's memory limits, then validates a bounded number of choices.
-- Set your own aggressive VRAM and system RAM free-memory buffers, with hardware-specific help.
-- Hover over either **Save preset** button to see how AutoTune chooses its recommendation, the tested choice and up to two calculated alternatives.
-- Use **Ctrl+Z** to undo tuning parameter changes and AutoTune row edits or deletions.
-- More compact live readings, automatic five-second monitoring including VRAM temperature, and lower monitoring overhead.
-- Stalled candidate tests can stop and advance automatically after a bounded wait and verified cleanup.
+- AutoTune can skip a test that reaches a memory safety limit and continue once the test has stopped and memory has recovered.
+- More reliable GPU memory readings, a readiness check before each test, and clearer diagnostics when required readings are unavailable.
+- Combination estimates retain a realistic allowance for Windows, Topaz and other applications, and use measured memory overruns to improve later choices.
+- Fewer repeated upgraded-baseline tests after brief memory failures when a recent, comparable measurement can be reused.
+- High-resolution adaptive plans can include a 161-frame chunk test when memory screening would otherwise omit every larger-chunk test.
+- Stopped rows no longer show partial FPS as a completed result. Reports retain useful diagnostics even if the first baseline cannot finish.
 
 ## Getting started
 
@@ -27,7 +27,7 @@ To update, choose **Exit** in the launcher or its tray menu, back up the old EXE
 
 ![Settings and cuDNN management](docs/screenshots/settings.png)
 
-Screenshots show one example computer, not recommended settings for every GPU.
+Screenshots show the existing interface from earlier releases on one example computer, not recommended settings for every GPU.
 
 ## Find settings for your computer
 
@@ -52,7 +52,13 @@ The aggressive buffer fields accept decimal percentages from **0% up to the cons
 
 VRAM and system RAM use their **own installed capacities** to select a row. Percentages reserve space from total memory, including Windows, Topaz and other applications. A real Topaz export can use more memory than the idle Topaz interface used during AutoTune; leave a larger buffer if needed. Lower buffers increase out-of-memory risk. Changing these fields affects new plans, not older saved results.
 
-Candidate tests that stop reporting render progress are stopped automatically after at least **20 minutes**, with a longer allowance when successful baseline timing warrants it. Overall test deadlines remain finite. AutoTune verifies that the worker has stopped and memory has settled before continuing. Baseline and model-loading phases have separate safeguards; host-memory emergencies or unverified cleanup stop the campaign and preserve completed results.
+Candidate tests that stop reporting render progress are stopped automatically after at least **20 minutes**, with a longer allowance when successful baseline timing warrants it. Overall test deadlines remain finite. Baseline and model-loading phases have separate safeguards.
+
+When a test reaches a memory safety limit, AutoTune stops that test and checks that its worker has closed and memory has recovered before advancing. An optional Topaz comparison may be skipped after recovery; comparisons with that missing baseline are then unavailable. The **upgraded baseline** is required to compare setting changes, so AutoTune stops if that reference cannot finish. Persistent memory pressure, missing required GPU readings, or unverified cleanup also stop the run and preserve completed results. Lowering a preset's free-memory buffer does not disable these safeguards.
+
+AutoTune reuses a recent, comparable upgraded baseline after some brief memory failures, while retaining fresh comparison runs when conditions require them. On eligible high-resolution systems, the adaptive plan can add a modest **161-frame chunk** test even when its initial memory estimate excludes larger chunks. That row still has to pass the same memory safeguards.
+
+Combination recommendations include an allowance for background memory use. If a tested combination uses more memory than predicted, that measurement can tighten the estimates for the remaining comparable choices. Aggressive and conservative still use their own VRAM and system RAM limits.
 
 Review **Results / efficiency**, save a validated preset, or use **Export reports…** for the PDF and result files. “Aggressive” is a speed-oriented choice, not a guarantee of the fastest possible settings. Use **Thorough** to check close or surprising results.
 
