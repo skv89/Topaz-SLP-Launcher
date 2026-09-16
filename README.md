@@ -1,17 +1,18 @@
-# Topaz SLP Tuning Launcher v1.0.3.3
+# Topaz SLP Tuning Launcher v1.0.3.4
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Download](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## What is new in v1.0.3.3
+## What is new in v1.0.3.4
 
-- AutoTune can skip a test that reaches a memory safety limit and continue once the test has stopped and memory has recovered.
-- More reliable GPU memory readings, a readiness check before each test, and clearer diagnostics when required readings are unavailable.
-- Combination estimates retain a realistic allowance for Windows, Topaz and other applications, and use measured memory overruns to improve later choices.
-- Fewer repeated upgraded-baseline tests after brief memory failures when a recent, comparable measurement can be reused.
-- High-resolution adaptive plans can include a 161-frame chunk test when memory screening would otherwise omit every larger-chunk test.
-- Stopped rows no longer show partial FPS as a completed result. Reports retain useful diagnostics even if the first baseline cannot finish.
+- Test your own combinations using **Add row or combination** and **Edit row or combination**, with the familiar tuning controls.
+- Use the arrow beside **Start AutoTune** to run selected tests with the required baseline comparisons. A previous full AutoTune run is not needed.
+- Built-in adaptive plans choose tests up front using your hardware and selected output resolution. No preliminary calibration run or previous results are required.
+- AutoTune checks the selected native and upgraded cuDNN runtimes before starting benchmark rows, so a startup failure is reported early and saved for troubleshooting.
+- Support ZIPs include the upgraded cuDNN inventory and useful evidence from middle rows, with problem rows prioritized when limits are reached.
+- New runs retain compact memory, temperature, clock and chunk-timing evidence using readings already collected by the app.
+- AutoTune rejects unsupported saved test rows and preserves the original plan when you create a replacement.
 
 ## Getting started
 
@@ -31,11 +32,28 @@ Screenshots show the existing interface from earlier releases on one example com
 
 ## Find settings for your computer
 
-Open **Benchmark / System AutoTune**, choose your output resolution and **Standard** mode, then click **Create / refresh plan**. Add, edit or remove setting tests if desired and save your suite. Prepare the selected runtimes if prompted, then start AutoTune.
+Open **Benchmark / System AutoTune**, choose your output resolution and **Standard** mode, then click **Create / refresh plan**. The built-in adaptive suite uses your installed memory and selected output dimensions to generate its setting tests before the run. It does not require previous results or a preliminary benchmark. Saved custom suites keep your edits.
 
-Leave Topaz open and idle, disconnect from the internet, keep the hardware running cool by leaving open windows, using AC, or running with an open case, and avoid using the computer during AutoTune as I found even light computer use such as typing documents or web browsing without videos can affect the performance significantly. Keep in mind each AutoTune row tests a single isolated parameter tweak that might result in a few percentage point of performance difference; but if outside factors distorts the performance by a few percent, then the AutoTune results might not be reliable or useful. Saved tables remain available for reference; they do not resume processing.
+Add, edit or remove tests if desired and save your suite. Prepare the selected runtimes if prompted, then start AutoTune.
+
+Leave Topaz open and idle, disconnect from the internet, keep the hardware running cool by leaving open windows, using AC, or running with an open case, and avoid using the computer during AutoTune as I found even light computer use such as typing documents or web browsing without videos can affect the performance significantly. Keep in mind individual-setting rows test a single parameter tweak, while custom-combination rows test all selected changes together. A result might differ by only a few percentage points; but if outside factors distorts the performance by a few percent, then the AutoTune results might not be reliable or useful. Saved tables remain available for reference; they do not resume processing.
 
 ![AutoTune test plan](docs/screenshots/benchmark-plan.png)
+
+### Test your own combination
+
+Choose **Add row or combination**, select a combination and enter its settings. You can start from current, saved or previously tested settings. **Edit row or combination** changes an existing editable row. Hover over a combination row, or use its keyboard help, to see the full settings.
+
+To compare just a few ideas, select those rows and choose **Run selected tests** from the arrow beside **Start AutoTune**. The launcher includes the required Topaz and upgraded-cuDNN baseline comparisons automatically. This works on the first run; you do not need to finish a full suite or delete other rows. The normal **Start AutoTune** action still runs the full plan.
+
+Custom combinations use the same live memory safeguards. Their measured results are treated as complete combinations, not as separate gains to add to other settings. A user-selected combination is not automatically a validated preset recommendation.
+
+### Runtime checks before AutoTune
+
+After the selected runtimes are prepared, AutoTune checks that each runtime needed by the plan can load before preparing test media or starting timed rows. A comparison run checks native and upgraded cuDNN. The check does not render a video, change the installed DLLs, or add a delay when simply opening the launcher. Each runtime check has a 30-second deadline; loading time varies by computer.
+
+If a runtime cannot start, AutoTune stops before the benchmark rows and saves the diagnostic results. Open **Run history…** and use **Export selected diagnostics…** for that run. A passed startup check confirms loading, not that every setting will fit in memory or process successfully.
+
 
 With **Derive and validate conservative + aggressive combinations** enabled, AutoTune combines successfully tested settings and ranks the choices by predicted speed. Each choice must fit **both** the VRAM and system RAM buffers for its preset. Aggressive and conservative use their own limits. The isolated setting suite is not run again.
 
@@ -88,7 +106,7 @@ Graphs reuse the existing monitor readings. Each new SLP file replaces the previ
 
 Open **Run history…**:
 
-- **Export selected diagnostics…**: select the AutoTune runs you need help with. The ZIP includes troubleshooting details for those runs and the launcher's recent log.
+- **Export selected diagnostics…**: select the AutoTune runs you need help with. The ZIP includes runtime startup outcomes, native and upgraded cuDNN inventory metadata, test results, per-row logs and the launcher's recent log. New runs also retain compact resource history and separate first-chunk/later-chunk timings. All rows are considered; failed, warning-bearing and unusually slow rows receive priority within the archive limits. The manifest identifies missing, truncated or omitted files. Older runs cannot supply measurements that were never recorded.
 - **App support ZIP…**: use this for a general launcher problem—for example, an error when opening Topaz. No run selection is needed.
 - **Delete selected…**: remove selected saved runs after reviewing the size and confirming.
 - **Clean old logs…**: remove eligible older logs while keeping results, reports and failed-run evidence.
