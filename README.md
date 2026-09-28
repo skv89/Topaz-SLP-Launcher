@@ -1,18 +1,16 @@
-# Topaz SLP Tuning Launcher v1.0.3.4
+# Topaz SLP Tuning Launcher v1.0.3.5
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Download](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## What is new in v1.0.3.4
+## What is new in v1.0.3.5
 
-- Test your own combinations using **Add row or combination** and **Edit row or combination**, with the familiar tuning controls.
-- Use the arrow beside **Start AutoTune** to run selected tests with the required baseline comparisons. A previous full AutoTune run is not needed.
-- Built-in adaptive plans choose tests up front using your hardware and selected output resolution. No preliminary calibration run or previous results are required.
-- AutoTune checks the selected native and upgraded cuDNN runtimes before starting benchmark rows, so a startup failure is reported early and saved for troubleshooting.
-- Support ZIPs include the upgraded cuDNN inventory and useful evidence from middle rows, with problem rows prioritized when limits are reached.
-- New runs retain compact memory, temperature, clock and chunk-timing evidence using readings already collected by the app.
-- AutoTune rejects unsupported saved test rows and preserves the original plan when you create a replacement.
+- Supports the changed SLP runtime layout in Topaz Video **1.7.1**, including detection of native tuning values when SLP runs.
+- Fixes **Apply Settings** and **Launch Topaz** failing when saved history contains settings from another launcher version. Existing history is preserved.
+- AutoTune distinguishes **RAM safety stops** from **commit safety stops**. Hover over a stopped row to see the recorded values and an explanation.
+- cuDNN installation and restoration can proceed while a verified, read-only video-information probe is running. Topaz, rendering workers and unverified processes still need to finish first; the launcher does not force-close them.
+- Checks for blocking processes before requesting administrator access for cuDNN changes.
 
 ## Getting started
 
@@ -22,7 +20,7 @@ Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory
 4. Click **Launch Topaz**, then start an SLP export normally in Topaz.
 5. Test a short duplicate clip at your intended output resolution before a long job.
 
-The launcher now supports the new Topaz Video v1.7.1.2 Beta and likely all past versions and likely future versions. It handles its compatibility helper automatically if needed; Windows may ask for administrator approval. 
+Supports the tested Topaz Video **1.7.1** runtime layout and compatible earlier installations. Other builds, including betas, are checked for compatibility before tuning is applied; support for an unknown build is not guaranteed. Some installations need a one-time compatibility-helper setup, which can request Windows administrator approval. Replacing or restoring installed cuDNN also requires administrator approval.
 
 To update, choose **Exit** in the launcher or its tray menu, back up the old EXE, then replace it. Keep **Topaz-SLP-Launcher-Data** to retain settings, presets, reports and cuDNN backups.
 
@@ -73,6 +71,8 @@ VRAM and system RAM use their **own installed capacities** to select a row. Perc
 Candidate tests that stop reporting render progress are stopped automatically after at least **20 minutes**, with a longer allowance when successful baseline timing warrants it. Overall test deadlines remain finite. Baseline and model-loading phases have separate safeguards.
 
 When a test reaches a memory safety limit, AutoTune stops that test and checks that its worker has closed and memory has recovered before advancing. An optional Topaz comparison may be skipped after recovery; comparisons with that missing baseline are then unavailable. The **upgraded baseline** is required to compare setting changes, so AutoTune stops if that reference cannot finish. Persistent memory pressure, missing required GPU readings, or unverified cleanup also stop the run and preserve completed results. Lowering a preset's free-memory buffer does not disable these safeguards.
+
+A **RAM safety stop** means free physical system memory fell below the safety floor. A **commit safety stop** means Windows had too little remaining memory-commit capacity (backed by RAM and the pagefile). Commit can run low while the displayed physical RAM and VRAM still have room. Hover over a stopped result for the recorded values; closing memory-heavy applications or allowing more Windows-managed pagefile space may help.
 
 AutoTune reuses a recent, comparable upgraded baseline after some brief memory failures, while retaining fresh comparison runs when conditions require them. On eligible high-resolution systems, the adaptive plan can add a modest **161-frame chunk** test even when its initial memory estimate excludes larger chunks. That row still has to pass the same memory safeguards.
 
