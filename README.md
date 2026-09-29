@@ -1,16 +1,15 @@
-# Topaz SLP Tuning Launcher v1.0.3.5
+# Topaz SLP Tuning Launcher v1.0.3.6
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Download](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## What is new in v1.0.3.5
+## What is new in v1.0.3.6
 
-- Supports the changed SLP runtime layout in Topaz Video **1.7.1**, including detection of native tuning values when SLP runs.
-- Fixes **Apply Settings** and **Launch Topaz** failing when saved history contains settings from another launcher version. Existing history is preserved.
-- AutoTune distinguishes **RAM safety stops** from **commit safety stops**. Hover over a stopped row to see the recorded values and an explanation.
-- cuDNN installation and restoration can proceed while a verified, read-only video-information probe is running. Topaz, rendering workers and unverified processes still need to finish first; the launcher does not force-close them.
-- Checks for blocking processes before requesting administrator access for cuDNN changes.
+- **Completed files stay visible** even when their original launcher settings are unavailable.
+- **Safer settings recall:** completed files with verified settings can still restore them. Other entries remain visible with **Load settings (unavailable)**, and previously verified settings are preserved.
+- **More reliable worker identification on Topaz Video 1.7.1**, addressing cases where the monitor could not verify the active SLP processing worker.
+- Restored settings information refreshes related processing measurements. Frame counts or average speeds that cannot be established reliably remain unavailable.
 
 ## Getting started
 
@@ -22,7 +21,9 @@ Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory
 
 Supports the tested Topaz Video **1.7.1** runtime layout and compatible earlier installations. Other builds, including betas, are checked for compatibility before tuning is applied; support for an unknown build is not guaranteed. Some installations need a one-time compatibility-helper setup, which can request Windows administrator approval. Replacing or restoring installed cuDNN also requires administrator approval.
 
-To update, choose **Exit** in the launcher or its tray menu, back up the old EXE, then replace it. Keep **Topaz-SLP-Launcher-Data** to retain settings, presets, reports and cuDNN backups.
+To update, finish any active export, then exit Topaz and the launcher. Back up the old EXE and the **Topaz-SLP-Launcher-Data** folder before replacing the EXE. Keep the data folder in place to retain settings, presets, reports and cuDNN backups. Open the updated launcher and use **Launch Topaz** so the monitoring fix takes effect.
+
+If you return to v1.0.3.5, use the matching data-folder backup: that older version cannot read new completed-file entries whose settings are unavailable.
 
 ![Settings and cuDNN management](docs/screenshots/settings.png)
 
@@ -93,6 +94,8 @@ Live readings update automatically every **five seconds**, including VRAM temper
 Ordinary low-VRAM warnings use a remaining-memory threshold of **0.8 GiB on 16-GB cards** and **1 GiB on 24-GB cards**. Uncheck **OOM / stall warnings** to disable those launcher popups; the preference is saved immediately. AutoTune's automatic safeguards remain active.
 
 **Completed chunks average** includes all finished chunks. **Steady average** excludes the first full-size warm-up chunk and a short final chunk. Neither includes pre-processing/loading.
+
+**Completed files** lists finished exports, not queued or currently processing videos. Right-click a completed entry to open its file or folder, or restore its verified settings. If the original settings are unavailable, the entry remains visible but **Load settings** is disabled. Missing output-format details and measurements are shown as unavailable.
 
 ![Monitor and completed files](docs/screenshots/monitor.png)
 
