@@ -21,7 +21,7 @@
 ## Runtime and everyday improvements
 
 - Choose **Topaz Native PyTorch 2.7.0 / CUDA 12.8** or optional experimental **PyTorch 2.9.1 / CUDA 13.0**, with verified downloads, compatible cuDNN choices and **Restore Topaz PyTorch/CUDA**.
-- AutoTune has separate baseline/upgraded PyTorch/CUDA and cuDNN selections. Topaz Native remains the default for ordinary launches; installed Topaz runtime files are not replaced by the optional stack.
+- AutoTune has separate baseline/upgraded PyTorch/CUDA and cuDNN selections. Native baseline checks keep using the original runtime even when a permanent upgrade is active.
 - PyTorch 2.9.1 / CUDA 13.0 / cuDNN **9.24.1.1** carries the reported **fastest tested** label; performance varies by system.
 - **Faster threaded SLP preflight for all codecs is checked by default for new users.** Existing saved on/off choices are preserved. Apply, fully close Topaz, then use Launch Topaz here.
 
@@ -36,3 +36,10 @@ Choose **Topaz-SLP-Launcher.exe** or **Topaz-SLP-Launcher-v1.2.0-portable.zip**.
 Finish active processing, close Topaz and the launcher, and back up the old EXE and **Topaz-SLP-Launcher-Data**. Replace the EXE and keep the data folder to retain settings, presets, Fusion profiles, runtime caches, reports and backups. Use Launch Topaz for subsequent tuned exports. To roll back, restore the matching old EXE and data backup.
 
 This release contains the changes since v1.1.0. The app is unsigned and independently developed; it is not endorsed by Topaz Labs or NVIDIA.
+
+## v1.2.0 runtime update
+
+- Fixed runtime/cuDNN selections reverting to Native in the controls after reopening, and cleared completed installation progress.
+- Merged runtime and cuDNN installation into **Install / update runtime**.
+- Added **Launcher only** and **Permanent (experimental)** installation modes. Permanent mode also applies when Topaz is opened directly; original files are retained for Restore. Other models may need additional compatibility changes.
+- Preserved existing presets, Fusion profiles, runtime caches and AutoTune history.

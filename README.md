@@ -49,9 +49,14 @@ The separate **Internal attention window** controls how many frames the model co
 
 ## PyTorch / CUDA and cuDNN
 
-In **Settings**, choose a PyTorch/CUDA runtime and matching cuDNN package, then use **Install selected runtime**. Downloads are pinned and verified; the optional stack is cached in the portable data folder. **Restore Topaz PyTorch/CUDA** returns future launcher-started sessions to Topaz Native. It does not replace installed Topaz runtime files. Fully close Topaz and use **Launch Topaz** for the selection to take effect. Topaz Native remains the default.
+In **Settings**, choose an installation mode, PyTorch/CUDA runtime and matching cuDNN package, then click **Install / update runtime**. One button handles both selections. The installed choice is remembered when the launcher reopens. Fully close Topaz before installing or restoring; existing sessions must be restarted.
 
-The separate cuDNN install/restore controls manage Topaz's cuDNN with verified backups. New downloads require accepting NVIDIA's license; installing or restoring cuDNN can require administrator approval. The **fastest tested** label for cuDNN **9.24.1.1 on CUDA 12 and CUDA 13** describes a reported comparison, not a universal ranking.
+- **Launcher only:** use the selected runtime when starting Topaz through **Launch Topaz**. The tuner can close afterward.
+- **Permanent (experimental):** install the selected runtime inside Topaz so it also works when Topaz is opened directly. Installation happens once, with no repeated installation for videos or chunks. Original files are retained for **Restore Topaz PyTorch/CUDA** and Native AutoTune baselines. Other models may need additional compatibility changes; if issues occur, restore the original runtime.
+
+Downloads are pinned and verified. Runtime caches, presets and Fusion profiles remain in **Topaz-SLP-Launcher-Data**. Switching a dropdown alone does not change the installed runtime.
+
+**Restore Topaz cuDNN** restores Topaz's original cuDNN from its verified backup. New cuDNN downloads require accepting NVIDIA's license; installing or restoring files inside Topaz can require administrator approval. The **fastest tested** label for cuDNN **9.24.1.1 on CUDA 12 and CUDA 13** describes a reported comparison, not a universal ranking.
 
 AutoTune offers separate **Baseline PyTorch/CUDA + cuDNN** and **Upgraded PyTorch/CUDA + cuDNN** choices. These test selections are independent of the runtime chosen for ordinary exports. The same cuDNN version can be compared across different PyTorch/CUDA runtimes. CUDA 13 needs a compatible NVIDIA driver; a faster result is not guaranteed.
 
@@ -95,7 +100,7 @@ Custom combinations use the same live memory safeguards. Their measured results 
 
 ### Runtime checks before AutoTune
 
-After the selected runtimes are prepared, AutoTune checks that each runtime needed by the plan can load before preparing test media or starting timed rows. A comparison run checks native and upgraded cuDNN. Each loading check has a 30-second deadline. A short real SLP request then checks the selected installation's model/authentication context before preparing long media. These checks occur when starting AutoTune, not when opening the launcher; they retain diagnostic evidence and leave installed DLLs unchanged.
+After the selected runtimes are prepared, AutoTune checks that each runtime needed by the plan can load before preparing test media or starting timed rows. A comparison run checks native and upgraded cuDNN. Loading checks are time-limited; the optional runtime gets extra time for first-use verification. A short real SLP request then checks the selected installation's model/authentication context before preparing long media. These checks occur when starting AutoTune, not when opening the launcher; they retain diagnostic evidence and leave installed DLLs unchanged.
 
 If a runtime cannot start, AutoTune stops before the benchmark rows and saves the diagnostic results. Open **Run history…** and use **Export selected diagnostics…** for that run. A passed startup check confirms loading, not that every setting will fit in memory or process successfully.
 
