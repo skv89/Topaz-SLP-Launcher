@@ -1,19 +1,21 @@
-# Topaz SLP Tuning Launcher v1.1.0
+# Topaz SLP Tuning Launcher v1.2.0
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
-[Download](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
+[Published releases](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## What is new in v1.1.0
+## New in v1.2.0 — build your Fusion collection
 
-- **Experimental BF16 decoder Fusion** provides another speed boost for supported Blackwell GPUs. **Native** remains the default.
-- **Fusion across AutoTune:** test individual settings and conservative/aggressive combinations with Fusion enabled, then compare the full aggressive combination with Fusion off using the same settings.
-- **Clearer comparisons:** separate upgraded-cuDNN, Fusion-reference and controlled-Topaz gains, plus **Stock Topaz gain % (whole job)** when matching verified stock measurements are available.
-- **Restore a saved run to the tables** from Run history, including completed, stopped, failed and untested rows, without starting processing or applying settings.
-- **Resizable table columns:** stretchable columns, with horizontal scrolling and widths retained during refreshes and window resizing.
-- **Clearer plans and compact controls:** Create / refresh plan opens Test plan; pending combinations appear immediately; Refresh versions and Prepare for offline run stay beside the cuDNN selections, with Fusion at the right.
-- **Improved GPU telemetry matching** on systems with multiple NVIDIA cards, with better support diagnostics when required readings are missing.
-- More descriptive hover help for attention-window grouping and DiT MLP chunks, plus an optional experimental **121-frame internal attention window**. The default remains **33 frames**.
+**Gotta catch 'em all! Your tuning results carry forward.** AutoTune can collect validated Fusion choices and useful measurements for your output resolutions, SLP settings and hardware. More relevant data can increase the chance of finding a faster kernel and achieving better speeds. Some runs confirm an existing winner; that knowledge helps avoid repeating work. More kernels do not guarantee a faster export every time.
+
+- **Choose your runtime:** Topaz Native **PyTorch 2.7.0 / CUDA 12.8**, or optional experimental **PyTorch 2.9.1 / CUDA 13.0**, with compatible cuDNN selection and a Restore Topaz PyTorch/CUDA button.
+- **Optimize Fusion:** search the bundled choices, or choose **Compile variations** to include that same search and build/test additional variations. A bundled kernel stays selected when it performs better. New compiled winners must pass output checks and a separate speed confirmation.
+- **Keep your collection:** view local choices, compiled kernels and retained timings in the Fusion tab. Compatible measurements guide future searches; matching validated choices are reused automatically.
+- **Standard or Extended:** both derive conservative and aggressive presets and support optional Fusion optimization/compilation plus final Fusion On/Off comparisons. Standard stops at the first qualifying combination per preset and retries failures; Extended compares up to three candidates per preset, even after a success.
+- **Clearer, roomier AutoTune:** grouped runtime selectors, more space for the tables, concise column/row help, and one warmed-FPS gain column against the recorded baseline.
+- **Faster threaded preflight enabled by default:** new users start with it checked. Existing saved choices are preserved. Apply changes, fully close Topaz, then use Launch Topaz here.
+
+Changes since v1.1.0.
 
 ## Getting started
 
@@ -29,9 +31,9 @@ To update, finish any active export, then exit Topaz and the launcher. Back up t
 
 To return to an older version, restore its matching EXE and data-folder backup. Older versions do not understand the new Fusion settings and saved AutoTune plans.
 
-![Settings and cuDNN management](docs/screenshots/settings.png)
+![Settings and runtime management](docs/screenshots/settings.png)
 
-Screenshots show one example computer. The Settings, test-plan and Run history images show v1.1.0; other images illustrate retained features from earlier releases. Shown settings are not recommendations for every GPU.
+Screenshots show an example computer, not recommended settings for every GPU. Settings, AutoTune and bundled Fusion views are captured from v1.2.0. The restored AutoTune tables retain an earlier run, including its original reference rows; they do not represent a new v1.2.0 benchmark. Other images illustrate unchanged features.
 
 ## Try experimental BF16 Fusion
 
@@ -39,9 +41,19 @@ Fusion combines selected decoder operations so the GPU can process them with few
 
 In **Settings**, choose **BF16 fusion (experimental)** under **Decoder processing**, click **Apply Settings**, then use **Launch Topaz** for your next SLP export. Compare a short duplicate clip before a long job. Choose **Native** and apply it to return to normal decoder processing.
 
-Fusion requires **GeForce RTX 50-series or RTX PRO Blackwell GPUs (sm120)**. **RTX 30/40-series are not supported.** Physical qualification used an RTX PRO 6000 Blackwell with Topaz Video 1.7.1 / PyTorch 2.7.0 / CUDA 12.8; other Topaz builds are not guaranteed. Fusion AutoTune checks its target GPU before setup or any test rows, and rejects unsupported or unidentified GPUs. Turn off Fusion and refresh the plan to run Native tests. Ordinary exports retain Native fallback with an explanation; later runtime or model incompatibility can still stop a required Fusion AutoTune reference. No separate compiler installation is required.
+Fusion requires **GeForce RTX 50-series or RTX PRO Blackwell GPUs (sm120)**. **RTX 30/40-series are not supported.** GPU testing used an RTX PRO 6000 Blackwell. Bundled Fusion, local profile optimization and optional compilation support both offered PyTorch/CUDA runtimes. Compatibility is checked for the selected GPU, Topaz model and runtime. Other builds are not guaranteed. Unsupported or incompatible cases use Native fallback where possible; Fusion-required AutoTune tests can stop with an explanation. Bundled Fusion needs no compiler; optional compilation requires the selected runtime's matching Triton compiler.
+
+**Experimental CUDA 13 limitation:** complete-export equivalence and repeatability remain unverified. Decoder-operation output checks passed, but repeated short exports varied even with bundled Fusion alone. Compare a short export before production use. Compilation can improve an individual operation without producing a measurable whole-export improvement.
 
 The separate **Internal attention window** controls how many frames the model considers together. **33** is the default; **121** is experimental, can use more memory and may change the result. It is independent of Fusion. Test output quality before adopting it.
+
+## PyTorch / CUDA and cuDNN
+
+In **Settings**, choose a PyTorch/CUDA runtime and matching cuDNN package, then use **Install selected runtime**. Downloads are pinned and verified; the optional stack is cached in the portable data folder. **Restore Topaz PyTorch/CUDA** returns future launcher-started sessions to Topaz Native. It does not replace installed Topaz runtime files. Fully close Topaz and use **Launch Topaz** for the selection to take effect. Topaz Native remains the default.
+
+The separate cuDNN install/restore controls manage Topaz's cuDNN with verified backups. New downloads require accepting NVIDIA's license; installing or restoring cuDNN can require administrator approval. The **fastest tested** label for cuDNN **9.24.1.1 on CUDA 12 and CUDA 13** describes a reported comparison, not a universal ranking.
+
+AutoTune offers separate **Baseline PyTorch/CUDA + cuDNN** and **Upgraded PyTorch/CUDA + cuDNN** choices. These test selections are independent of the runtime chosen for ordinary exports. The same cuDNN version can be compared across different PyTorch/CUDA runtimes. CUDA 13 needs a compatible NVIDIA driver; a faster result is not guaranteed.
 
 ## Find settings for your computer
 
@@ -53,28 +65,29 @@ Leave Topaz open and idle, disconnect from the internet, keep the hardware runni
 
 ![AutoTune test plan](docs/screenshots/benchmark-plan.png)
 
-### Compare Fusion and stock Topaz
+### Compare Fusion with the baseline
 
-Check **Enable BF16 Fusion (experimental)** before creating the plan. Fusion applies to the tuning rows and derived conservative/aggressive combinations. The controlled Topaz baseline, upgraded baseline and stock Topaz references keep Fusion off. With combination validation enabled, an additional **Aggressive combination · Fusion OFF comparison** tests the same complete settings as the Fusion-on winner.
+Check **Enable BF16 Fusion (experimental)** before creating the plan. Fusion applies to the tuning rows and derived conservative/aggressive combinations. The Topaz baseline and upgraded baseline keep Fusion off. In Standard and Extended, the conservative and aggressive finalists each receive an identical-settings Fusion-off comparison. Identical combinations share work when both recorded memory limits pass.
 
 The plan shows the later combination steps immediately. Their settings and clip lengths are derived after usable individual results exist; the pending entries do not claim measurements.
 
 | Reference | What it measures |
 |---|---|
-| Controlled Topaz baseline | Fixed tuning settings with the selected verified Topaz cuDNN baseline and Fusion off. |
-| Upgraded baseline | The same controlled tuning settings with upgraded cuDNN and Fusion off. |
-| Upgraded cuDNN + Fusion reference | The same controlled tuning settings with upgraded cuDNN and Fusion on. Individual Fusion-enabled tuning rows are compared with this reference. |
-| Stock Topaz reference | Topaz's automatic native settings with verified Topaz cuDNN, used for matching whole-job comparisons when available. |
+| Topaz baseline | The first measured baseline row, with the selected Topaz runtime/cuDNN and Fusion off. Other runtime selections are labeled controlled baseline. |
+| Upgraded baseline | The same baseline tuning settings with the selected upgraded PyTorch/CUDA and cuDNN, and Fusion off. |
+| Upgraded cuDNN + Fusion reference | The same baseline tuning settings with the selected upgraded runtime and Fusion on. Individual Fusion-enabled tuning rows are compared with this reference. |
 
-**Start / middle / end** labels identify repeated Fusion-reference checks for performance changes during a run. They use the same settings. The full aggressive ON/OFF comparison shows Fusion's contribution with the entire combination in use.
+**Standard** keeps the reference at the end of the individual tests and omits the extra mid-suite and between-combination references. **Extended** retains nearby references to track performance changes. References use the same settings. The final conservative and aggressive summaries show Fusion ON and OFF FPS and each gain against the same Topaz baseline (or selected baseline).
 
-Use **Stock Topaz gain % (whole job)** for the measured overall improvement over stock Topaz. It includes the first render chunk and output finalization; preflight and model loading are outside that timing. The controlled tuning comparisons use steady chunk speed. These have different timing scopes. Missing, failed or unmatched comparisons remain unavailable rather than showing an estimated gain.
+**FPS gain % vs Topaz baseline** compares the two warmed chunks with the baseline row from this run. Other selected runtime baselines are labeled **controlled baseline**. Chunk 1 is discarded in Standard and Extended. Fusion On/Off compares the same full combination with only Fusion changed. Raw timing evidence remains available in exported data.
 
 Fusion-enabled AutoTune adds reference and comparison rows, so it can take longer. Results are specific to your computer and test clip; they do not establish the fastest possible settings for every export.
 
 ### Test your own combination
 
-Choose **Add row or combination**, select a combination and enter its settings. You can start from current, saved or previously tested settings. **Edit row or combination** changes an existing editable row. Hover over a combination row, or use its keyboard help, to see the full settings.
+Choose **Add row or combination**, select a combination and enter its settings. **Saved presets** fills the fields from an existing preset. When a completed AutoTune run is available, the next dropdown offers its conservative and aggressive recommendation choices; calculated alternatives remain labeled as estimates. Choose **BF16 Fusion: On** or **Off** independently of the suite checkbox. Saving the dialog immediately adds or updates the table. **Edit row or combination** changes an existing editable row. Hover over a combination row for its purpose and result; press F1 for all settings.
+
+Use Ctrl or Shift to select several setting-test rows, then press Delete or choose **Remove selected rows**. One Ctrl+Z restores the entire removed group. Required baseline and reference rows remain protected. Removing all setting tests also clears the automatic combination steps.
 
 To compare just a few ideas, select those rows and choose **Run selected tests** from the arrow beside **Start AutoTune**. The launcher includes the required Topaz and upgraded-cuDNN baseline comparisons automatically. This works on the first run; you do not need to finish a full suite or delete other rows. The normal **Start AutoTune** action still runs the full plan.
 
@@ -82,14 +95,14 @@ Custom combinations use the same live memory safeguards. Their measured results 
 
 ### Runtime checks before AutoTune
 
-After the selected runtimes are prepared, AutoTune checks that each runtime needed by the plan can load before preparing test media or starting timed rows. A comparison run checks native and upgraded cuDNN. The check does not render a video, change the installed DLLs, or add a delay when simply opening the launcher. Each runtime check has a 30-second deadline; loading time varies by computer.
+After the selected runtimes are prepared, AutoTune checks that each runtime needed by the plan can load before preparing test media or starting timed rows. A comparison run checks native and upgraded cuDNN. Each loading check has a 30-second deadline. A short real SLP request then checks the selected installation's model/authentication context before preparing long media. These checks occur when starting AutoTune, not when opening the launcher; they retain diagnostic evidence and leave installed DLLs unchanged.
 
 If a runtime cannot start, AutoTune stops before the benchmark rows and saves the diagnostic results. Open **Run history…** and use **Export selected diagnostics…** for that run. A passed startup check confirms loading, not that every setting will fit in memory or process successfully.
 
 
-With **Derive and validate conservative + aggressive combinations** enabled, AutoTune combines successfully tested settings and ranks the choices by predicted speed. Each choice must fit **both** the VRAM and system RAM buffers for its preset. Aggressive and conservative use their own limits. The isolated setting suite is not run again.
+In **Standard** and **Extended**, AutoTune combines successfully tested settings and ranks the choices by predicted speed. Each choice must fit **both** the VRAM and system RAM buffers for its preset. Aggressive and conservative use their own limits. The isolated setting suite is not run again.
 
-AutoTune validates up to **three aggressive combinations**, then up to **three conservative combinations**, trying the next eligible choice if needed. A successful conservative choice can also serve as the aggressive fallback. Only eligible tested results can be saved as recommendations. Hover over either Save preset button, or focus it and press **F1**, for the selection explanation and a table of the tested recommendation and up to two calculated alternatives. Calculated gains and memory totals are estimates; the alternatives are for information and are not saved by those buttons. The help identifies the capacities and buffers recorded for that run and flags differences from current hardware or edited inputs. It shows the winner's measured memory peaks separately from estimates. Older results are not recalculated when the inputs change.
+**Standard** stops at the first qualifying result per preset, retrying failures up to three attempts. It uses the end-of-individual-tests reference without extra combination baseline runs. **Extended** compares up to three candidates per preset, even if the first qualifies, and chooses the fastest qualifying result. Extended keeps nearby comparison references. Both modes test each individual setting once, retain three full chunks per scored row, and support optional **Bundled kernels** or **Compile variations** optimization plus final Fusion On/Off comparisons. Historical Thorough results retain their original three repetitions; new plans use Extended. **Complete** means rendering finished. A **RAM/VRAM buffer not met** label explains why a completed candidate cannot qualify for that preset. A successful conservative choice can also serve as the aggressive fallback. Only eligible tested results can be saved as recommendations. Hover over either Save preset button, or focus it and press **F1**, for the selection explanation and a table of the tested recommendation and up to two calculated alternatives. Calculated gains and memory totals are estimates; the alternatives are for information and are not saved by those buttons. The help identifies the capacities and buffers recorded for that run and flags differences from current hardware or edited inputs. It shows the winner's measured memory peaks separately from estimates. Older results are not recalculated when the inputs change.
 
 The aggressive buffer fields accept decimal percentages from **0% up to the conservative buffer**. Press Enter or leave the field to commit an edit: a number above the limit becomes the limit, and a negative number becomes zero. Blank or nonnumeric entries return to the last valid value.
 
@@ -108,15 +121,62 @@ When a test reaches a memory safety limit, AutoTune stops that test and checks t
 
 A **RAM safety stop** means free physical system memory fell below the safety floor. A **commit safety stop** means Windows had too little remaining memory-commit capacity (backed by RAM and the pagefile). Commit can run low while the displayed physical RAM and VRAM still have room. Hover over a stopped result for the recorded values; closing memory-heavy applications or allowing more Windows-managed pagefile space may help.
 
-AutoTune reuses a recent, comparable upgraded baseline after some brief memory failures, while retaining fresh comparison runs when conditions require them. On eligible high-resolution systems, the adaptive plan can add a modest **161-frame chunk** test even when its initial memory estimate excludes larger chunks. That row still has to pass the same memory safeguards.
+Extended can reuse a recent comparable reference after brief memory failures; Standard uses its completed end-of-individual-tests reference. On eligible high-resolution systems, the adaptive plan can add a modest **161-frame chunk** test even when its initial memory estimate excludes larger chunks. That row still has to pass the same memory safeguards.
 
 Combination recommendations include an allowance for background memory use. If a tested combination uses more memory than predicted, that measurement can tighten the estimates for the remaining comparable choices. Aggressive and conservative still use their own VRAM and system RAM limits.
 
-Review **Results / efficiency**, save a validated preset, or use **Export reports…** for the PDF and result files. “Aggressive” is a speed-oriented choice, not a guarantee of the fastest possible settings. Use **Thorough** to check close or surprising results.
+Review **Results / efficiency**, save a validated preset, or use **Export reports…** for the PDF and result files. “Aggressive” is a speed-oriented choice, not a guarantee of the fastest possible settings. Use **Extended** to compare more combinations. Repeat an individual measurement when a surprising result needs confirmation.
 
 ![AutoTune results](docs/screenshots/benchmark-results.png)
 
-Example results from an earlier release. Performance varies by computer, video and resolution.
+Saved-run screenshots retain the original measurements. Their Fusion gains apply to those complete combinations; the baseline column uses warmed FPS. Performance varies by computer, video and resolution.
+
+## Fusion profiles and measurements
+
+Open **Fusion** to view bundled reference measurements or local optimization profiles. Exact GPU/software and tensor compatibility determines reuse; choosing the nearest output resolution alone is insufficient. Other supported Blackwell systems can measure their own choices with the optional final-combination stage. Their speed can differ from the reference workstation.
+
+In AutoTune, enable **Optimize** beside BF16 Fusion:
+
+| Method | What it does |
+|---|---|
+| **Bundled kernels** | Tests the included Fusion choices and saves the best confirmed choice for your settings and computer. No compiler is needed. |
+| **Compile variations** | Does the same bundled search, **plus** compiles and tests additional variations from trusted templates. It can keep a bundled winner. New compiled choices need output checks and separate speed confirmation. Adds preparation time and requires a matching compiler. |
+
+![Compile variations help](docs/screenshots/fusion-method-help.png)
+
+Normal exports never compile. A small helper inside Topaz's processing worker checks each actual decoder tensor and chooses a compatible saved profile; otherwise it uses the established bundled path. A change of output resolution does not blindly reuse the previous resolution's winner. Compatible internal shapes can share a profile even when they come from different output resolutions. The launcher window does not need to remain open for this selection during an ordinary export.
+
+**Your tuning results carry forward.** Saved choices are reused when compatible. Stable measurements help order later searches, and a new shape is tested before a newly optimized choice is activated. Profiles are specific to the relevant GPU/software/tensor combination. Slower results are useful data too; unsuccessful compiled binaries are discarded. Disabling a profile keeps its record and affects newly started workers.
+
+Fusion preparation rows gather these measurements; they deliberately have no export FPS. Turn off **Optimize** to skip preparation while keeping bundled Fusion. Bundled search has a 90-second operator-work budget; compilation has a five-minute search budget for selected demanding tensors, plus any final bounded compilation. The separate model request adds time. Scored rows keep fixed choices. An unavailable compiler falls back to bundled optimization.
+
+**Reading the library:** Native means ordinary decoder processing; Bundled means the included Fusion path; Local means a measured selection from included variants; Tailored means a validated variation compiled on your computer. Kernel gain measures one decoder operation, not the whole video. Combination Fusion gain compares the full settings with Fusion On and Off. Several tensor rows may share that same combination result. Hover over headings or press F1 for details.
+
+### The bundled starting point
+
+The development campaign screened **60 output-resolution/decoder-tile combinations across 12 output resolutions**. Later production testing added **1920×1080 with a 1152-pixel decoder tile**, for **61 distinct pairs**. These generated the shapes used to build a library of **2,009 measured internal decoder tensor configurations**.
+
+The app includes **7 bundled Fusion variants implemented by 105 precompiled GPU kernel files**. Files include shared processing stages and shape-specific versions; they are not 105 independent algorithms. Your own optimization and compilation runs add the profiles and measurements most relevant to your output resolutions, SLP settings and system hardware.
+
+![Bundled Fusion measurements](docs/screenshots/fusion-bundled.png)
+
+| Output resolution | Decoder tile sizes screened | Pairs |
+|---|---|---:|
+| 1280x720 | 480, 640, 720, 1024 | 4 |
+| 1280x960 | 480, 512, 640, 768, 960, 1024 | 6 |
+| 1400x1080 | 480, 512, 640, 768, 1024, 1080 | 6 |
+| 1440x1080 | 480, 640, 768, 1024, 1080 | 5 |
+| 1920x1080 | 480, 640, 768, 1024, 1080 | 5 |
+| 1440x1152 | 480, 640, 768, 1024, 1152 | 5 |
+| 1866x1440 | 480, 640, 768, 1024, 1440 | 5 |
+| 1920x1440 | 480, 640, 768, 1024, 1440 | 5 |
+| 2560x1440 | 480, 640, 768, 896, 1408, 1440 | 6 |
+| 2800x2160 | 480, 640, 1024, 1152 | 4 |
+| 2880x2160 | 480, 640, 1024, 1152 | 4 |
+| 3840x2160 | 480, 640, 1024, 1152, 1408 | 5 |
+
+The extra 1920×1080 / 1152 pair comes from later production checks. Full-video On/Off comparisons covered selected settings, **not every possible combination** of resolution, chunk, overlap and tiling. Bundled measurements remain available as reference results, not a speed promise for other computers.
+
 
 ## Monitor your videos
 
@@ -160,10 +220,12 @@ Use **Ctrl+Z** to undo tuning parameter edits or AutoTune row edits/deletions. H
 
 ![Starting guide](docs/screenshots/guide.png)
 
-Requires **Windows x64**, a supported **Topaz Video installation with SLP 2.6**, and an **NVIDIA CUDA GPU**. No Python installation is needed. AutoTune and optional faster preflight require both FFmpeg and FFprobe; the selected Topaz installation should already provide them. You can also place **ffmpeg.exe** and **ffprobe.exe** together beside the launcher EXE (or in its **bin**, **ffmpeg**, or **ffmpeg/bin** subfolder). No system settings need to be changed. New cuDNN downloads require accepting NVIDIA's license.
+Requires **Windows x64**, a supported **Topaz Video installation with SLP 2.6**, and an **NVIDIA CUDA GPU**. No Python installation is needed. AutoTune and faster preflight require both FFmpeg and FFprobe; the selected Topaz installation should already provide them. You can also place **ffmpeg.exe** and **ffprobe.exe** together beside the launcher EXE (or in its **bin**, **ffmpeg**, or **ffmpeg/bin** subfolder). No system settings need to be changed. New cuDNN downloads require accepting NVIDIA's license.
 
 **Important:** tuning is experimental. Settings that fit a 96-GB workstation may not fit a 16-GB GPU/32-GB RAM computer. Larger chunks, tiles and batches—or an uncapped VAE—can greatly increase memory use. Safety guards cannot prevent every OOM or driver failure. 
 
 The app is unsigned, so Windows may show an unknown-publisher warning. Download only from this repository. This independent community tool is not endorsed by Topaz Labs or NVIDIA.
 
 [License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md)
+
+The **Fusion** page explains an empty local library and links directly to bundled measurements. Local profiles are created by the optional final-combination optimization stage; **Refresh profiles** only reloads existing profiles. Bundled rows summarize complete comparisons at 12 resolutions. **Details** shows the tested tile/chunk settings and separate tensor coverage; it does not imply every possible combination received a full-video test.
