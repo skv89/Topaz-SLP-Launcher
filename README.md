@@ -1,10 +1,23 @@
-# Topaz SLP Tuning Launcher v1.2.0
+# Topaz SLP Tuning Launcher v1.2.1
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Published releases](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## New in v1.2.0 — build your Fusion collection
+## New in v1.2.1 — Fusion compatibility and repair
+
+- The cuDNN only test now supports an optional third baseline row with BF16 Fusion on the upgraded runtime. All three rows use the same baseline SLP settings; uncheck Fusion to keep the two-row comparison.
+- Fixed missing output format, frame/chunk totals and remaining-time estimates in Monitor / FPS when Topaz omits its export-summary log entry. The monitor now also reads the active export command and matching worker log; FPS calculations are unchanged.
+- AutoTune defaults to **PyTorch 2.9.1 / CUDA 13.0 / cuDNN 9.24.1.1**, with the upgraded runtime labeled **fastest tested**. Restoring old results at startup no longer resets the next-run runtime choices; later selections are remembered. Previous results and the Topaz baseline are preserved.
+- BF16 Fusion help now has a separate troubleshooting paragraph directing you to **Check and repair Fusion…** when Fusion encounters issues or does not appear to improve speed.
+- **Fusion works with compatible SLP 2.6 weight updates.** An otherwise supported decoder is no longer rejected solely because its loaded weights differ from the original benchmark build.
+- **Check and repair Fusion…** sits beside **Refresh profiles** on the Fusion tab. It checks the launcher's Fusion files, saved profiles, GPU support, saved runtime selection and recent Fusion activity.
+- **Repair detected issues** restores missing or damaged bundled Fusion files and disables corrupt local profile records while retaining originals. Valid profiles and compiled kernels are kept.
+- Checks and repairs are **optional**. This update adds no mandatory diagnostic render or qualification step when opening Topaz or using Fusion. Settings help and Fusion error messages point to the new button.
+
+**EXE-only update:** close Topaz and the launcher, replace the EXE, keep **Topaz-SLP-Launcher-Data**, then reopen the launcher and use **Launch Topaz**. Existing presets, compatible Fusion profiles, compiled kernels, runtime caches and history carry forward.
+
+## Build your Fusion collection
 
 **Gotta catch 'em all! Your tuning results carry forward.** AutoTune can collect validated Fusion choices and useful measurements for your output resolutions, SLP settings and hardware. More relevant data can increase the chance of finding a faster kernel and achieving better speeds. Some runs confirm an existing winner; that knowledge helps avoid repeating work. More kernels do not guarantee a faster export every time.
 
@@ -15,7 +28,7 @@ Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory
 - **Clearer, roomier AutoTune:** grouped runtime selectors, more space for the tables, concise column/row help, and one warmed-FPS gain column against the recorded baseline.
 - **Faster threaded preflight enabled by default:** new users start with it checked. Existing saved choices are preserved. Apply changes, fully close Topaz, then use Launch Topaz here.
 
-Changes since v1.1.0.
+These collection and AutoTune features were introduced in v1.2.0.
 
 ## Getting started
 
@@ -33,7 +46,7 @@ To return to an older version, restore its matching EXE and data-folder backup. 
 
 ![Settings and runtime management](docs/screenshots/settings.png)
 
-Screenshots show an example computer, not recommended settings for every GPU. Settings, AutoTune and bundled Fusion views are captured from v1.2.0. The restored AutoTune tables retain an earlier run, including its original reference rows; they do not represent a new v1.2.0 benchmark. Other images illustrate unchanged features.
+Screenshots show an example computer, not recommended settings for every GPU. Settings, AutoTune and bundled Fusion views are captured from v1.2.0; Check and repair Fusion is captured from v1.2.1. The restored AutoTune tables retain an earlier run, including its original reference rows; they do not represent a new v1.2.0 benchmark. Other images illustrate unchanged features.
 
 ## Try experimental BF16 Fusion
 
@@ -42,6 +55,16 @@ Fusion combines selected decoder operations so the GPU can process them with few
 In **Settings**, choose **BF16 fusion (experimental)** under **Decoder processing**, click **Apply Settings**, then use **Launch Topaz** for your next SLP export. Compare a short duplicate clip before a long job. Choose **Native** and apply it to return to normal decoder processing.
 
 Fusion requires **GeForce RTX 50-series or RTX PRO Blackwell GPUs (sm120)**. **RTX 30/40-series are not supported.** GPU testing used an RTX PRO 6000 Blackwell. Bundled Fusion, local profile optimization and optional compilation support both offered PyTorch/CUDA runtimes. Compatibility is checked for the selected GPU, Topaz model and runtime. Other builds are not guaranteed. Unsupported or incompatible cases use Native fallback where possible; Fusion-required AutoTune tests can stop with an explanation. Bundled Fusion needs no compiler; optional compilation requires the selected runtime's matching Triton compiler.
+
+### If Fusion does not start
+
+Open **Fusion → Check and repair Fusion…**, beside **Refresh profiles**, and click **Check now**. The results explain file problems, GPU support, the saved runtime selection and recent recorded Fusion activity. The check does not render a video or run a benchmark. Opening the dialog does not start a check.
+
+If **Repair detected issues** becomes available, close Topaz and click it to restore damaged or missing bundled files, or disable corrupt profile records. Originals are backed up in **Topaz-SLP-Launcher-Data/fusion-repair-backups**; valid profiles, compiled kernels and history are retained. Restart Topaz through the launcher afterward.
+
+The button does not install drivers or runtimes or alter Topaz model files. When those need attention, the findings explain the next step. **Save report…** saves a local JSON report; nothing is uploaded. Review GPU details and local paths before sharing it.
+
+![Optional Check and repair Fusion dialog, before running a check](docs/screenshots/check-fusion.png)
 
 **Experimental CUDA 13 limitation:** complete-export equivalence and repeatability remain unverified. Decoder-operation output checks passed, but repeated short exports varied even with bundled Fusion alone. Compare a short export before production use. Compilation can improve an individual operation without producing a measurable whole-export improvement.
 
@@ -87,6 +110,8 @@ The plan shows the later combination steps immediately. Their settings and clip 
 **FPS gain % vs Topaz baseline** compares the two warmed chunks with the baseline row from this run. Other selected runtime baselines are labeled **controlled baseline**. Chunk 1 is discarded in Standard and Extended. Fusion On/Off compares the same full combination with only Fusion changed. Raw timing evidence remains available in exported data.
 
 Fusion-enabled AutoTune adds reference and comparison rows, so it can take longer. Results are specific to your computer and test clip; they do not establish the fastest possible settings for every export.
+
+**Quick runtime comparison:** choose **cuDNN only test**. Checking **BF16 Fusion** adds a third row: selected baseline with Native processing, upgraded runtime with Native processing, and upgraded runtime with BF16 Fusion. All rows use the same baseline SLP settings. Uncheck Fusion for two rows. This mode compares runtimes and Fusion without optimizing kernels or deriving presets.
 
 ### Test your own combination
 
