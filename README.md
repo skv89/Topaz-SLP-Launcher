@@ -1,10 +1,25 @@
-# Topaz SLP Tuning Launcher v1.2.1
+# Topaz SLP Tuning Launcher v1.2.2
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Published releases](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## New in v1.2.1 — Fusion compatibility and repair
+## New in v1.2.2 — Better Fusion searches, AutoTune fixes and CLI presets
+
+- **More time for useful Fusion optimization.** **Bundled kernels** allows up to **3 minutes** of active optimization per preparation. **Compile variations** allows up to **15 minutes**, including that same bundled search plus compiling and testing additional variations. Ordinary model loading and video processing no longer use up the search allowance.
+- **Completed work carries forward.** Later matching preparations reuse compatible completed checks and verified compiled kernels. If time, memory or a compiler problem leaves candidates unfinished, they remain pending for a later matching run. A newly added candidate is treated as new work.
+- **Comparison memory adapts to your available VRAM.** The optimizer compares candidate outputs in larger groups when memory is available and smaller groups when space is tight. Your output resolution, chunk size, tiles and output-check thresholds stay the same.
+- **Support for growing Fusion collections.** Large libraries no longer omit profiles beyond the old 4,096-record limit. The existing Fusion list loads rows as needed, while exports continue to select compatible saved choices automatically.
+- **Run saved presets from the command line.** List presets, run an existing batch script with a selected preset, or create a command-session setup file and exit. Each batch keeps its own settings and Fusion-profile snapshot, so later GUI edits do not change the next episode.
+- **More reliable AutoTune startup.** A leftover default model/authentication folder from a different Topaz product no longer overrides the installation selected in the launcher. Custom model locations remain supported.
+- **Clearer Fusion activity reports.** Check and repair Fusion now searches ordinary exports, AutoTune trials and CLI runs. A newer idle launch no longer hides completed work, and an older success does not hide a newer failure. Decoder Fusion and attention-window findings are reported separately.
+- **Optional short Fusion test.** Use the arrow beside **Check now** to choose **Run short Fusion test**. It performs a small 17-frame export, checks actual Fusion kernel use and the completed output, and supports cancellation. The regular **Check now** action checks files and recorded activity without rendering video.
+- **Repair more Fusion file problems.** **Repair detected issues** can restore a damaged compiled choice from an exact verified retained copy. If no suitable copy exists, that damaged choice is kept inactive so bundled Fusion remains available. Originals are backed up; valid profiles and user-disabled choices are retained.
+- **Better support reports and folder-path handling.** Diagnostic exports include the failed startup worker's traceback when available, with private values redacted. Bundled Fusion kernels also load from deep Windows folder paths.
+
+See the [Command-line guide](CLI_USAGE.md) for batch setup, examples and cancellation.
+
+## Previously in v1.2.1 — Fusion compatibility and repair
 
 - The cuDNN only test now supports an optional third baseline row with BF16 Fusion on the upgraded runtime. All three rows use the same baseline SLP settings; uncheck Fusion to keep the two-row comparison.
 - Fixed missing output format, frame/chunk totals and remaining-time estimates in Monitor / FPS when Topaz omits its export-summary log entry. The monitor now also reads the active export command and matching worker log; FPS calculations are unchanged.
@@ -19,7 +34,10 @@ Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory
 
 ## Build your Fusion collection
 
-**Gotta catch 'em all! Your tuning results carry forward.** AutoTune can collect validated Fusion choices and useful measurements for your output resolutions, SLP settings and hardware. More relevant data can increase the chance of finding a faster kernel and achieving better speeds. Some runs confirm an existing winner; that knowledge helps avoid repeating work. More kernels do not guarantee a faster export every time.
+**Gotta catch 'em all! Your tuning results carry forward.** Running AutoTune with Fusion optimization across a wider variety of output resolutions and SLP settings helps build a broader library of tested Fusion choices for your hardware. As that coverage grows, the app is more likely to have a faster compatible kernel ready to use automatically for future exports - including other not-yet tested but similar resolutions and settings that share matching internal workloads.
+Compile variations includes the same bundled-kernel optimization and additionally builds and tests new variations. More relevant profiles increase the opportunity for better performance across a broader range of exports.
+
+Some runs confirm an existing winner and help avoid repeated work. More profiles do not guarantee a speed gain on every export.
 
 - **Choose your runtime:** Topaz Native **PyTorch 2.7.0 / CUDA 12.8**, or optional experimental **PyTorch 2.9.1 / CUDA 13.0**, with compatible cuDNN selection and a Restore Topaz PyTorch/CUDA button.
 - **Optimize Fusion:** search the bundled choices, or choose **Compile variations** to include that same search and build/test additional variations. A bundled kernel stays selected when it performs better. New compiled winners must pass output checks and a separate speed confirmation.
@@ -46,7 +64,7 @@ To return to an older version, restore its matching EXE and data-folder backup. 
 
 ![Settings and runtime management](docs/screenshots/settings.png)
 
-Screenshots show an example computer, not recommended settings for every GPU. Settings, AutoTune and bundled Fusion views are captured from v1.2.0; Check and repair Fusion is captured from v1.2.1. The restored AutoTune tables retain an earlier run, including its original reference rows; they do not represent a new v1.2.0 benchmark. Other images illustrate unchanged features.
+Screenshots show an example computer, not recommended settings for every GPU. Settings, AutoTune and bundled Fusion views are captured from v1.2.0; Fusion optimization help is captured from v1.2.2; Check and repair Fusion is captured from v1.2.2 after its optional short test. The restored AutoTune tables retain an earlier run, including its original reference rows; they do not represent a new v1.2.0 benchmark. Other images illustrate unchanged features.
 
 ## Try experimental BF16 Fusion
 
@@ -60,11 +78,13 @@ Fusion requires **GeForce RTX 50-series or RTX PRO Blackwell GPUs (sm120)**. **R
 
 Open **Fusion → Check and repair Fusion…**, beside **Refresh profiles**, and click **Check now**. The results explain file problems, GPU support, the saved runtime selection and recent recorded Fusion activity. The check does not render a video or run a benchmark. Opening the dialog does not start a check.
 
-If **Repair detected issues** becomes available, close Topaz and click it to restore damaged or missing bundled files, or disable corrupt profile records. Originals are backed up in **Topaz-SLP-Launcher-Data/fusion-repair-backups**; valid profiles, compiled kernels and history are retained. Restart Topaz through the launcher afterward.
+For an optional execution check, choose **Run short Fusion test** from the arrow beside **Check now**. It uses a small separate workload, supports Cancel, and leaves your preset unchanged. Close Topaz and other GPU work first. It confirms Fusion execution, not speed at every resolution.
+
+If **Repair detected issues** becomes available, close Topaz and click it to restore damaged or missing bundled files, restore a damaged compiled choice from an exact retained copy, or keep an unrecoverable corrupt choice inactive. Originals are backed up in **Topaz-SLP-Launcher-Data/fusion-repair-backups**; valid profiles, compiled kernels and history are retained. Restart Topaz through the launcher afterward.
 
 The button does not install drivers or runtimes or alter Topaz model files. When those need attention, the findings explain the next step. **Save report…** saves a local JSON report; nothing is uploaded. Review GPU details and local paths before sharing it.
 
-![Optional Check and repair Fusion dialog, before running a check](docs/screenshots/check-fusion.png)
+![Check and repair Fusion after the optional short test](docs/screenshots/check-fusion.png)
 
 **Experimental CUDA 13 limitation:** complete-export equivalence and repeatability remain unverified. Decoder-operation output checks passed, but repeated short exports varied even with bundled Fusion alone. Compare a short export before production use. Compilation can improve an individual operation without producing a measurable whole-export improvement.
 
@@ -127,6 +147,8 @@ Custom combinations use the same live memory safeguards. Their measured results 
 
 After the selected runtimes are prepared, AutoTune checks that each runtime needed by the plan can load before preparing test media or starting timed rows. A comparison run checks native and upgraded cuDNN. Loading checks are time-limited; the optional runtime gets extra time for first-use verification. A short real SLP request then checks the selected installation's model/authentication context before preparing long media. These checks occur when starting AutoTune, not when opening the launcher; they retain diagnostic evidence and leave installed DLLs unchanged.
 
+AutoTune and CLI use the selected Topaz product's model/authentication context. An inherited default folder belonging to another Topaz product is ignored; custom definitions and separately configured model-data locations are preserved. This prevents an older **Topaz Video AI** installation's default folder from overriding a selected **Topaz Video** installation.
+
 If a runtime cannot start, AutoTune stops before the benchmark rows and saves the diagnostic results. Open **Run history…** and use **Export selected diagnostics…** for that run. A passed startup check confirms loading, not that every setting will fit in memory or process successfully.
 
 
@@ -176,9 +198,13 @@ In AutoTune, enable **Optimize** beside BF16 Fusion:
 
 Normal exports never compile. A small helper inside Topaz's processing worker checks each actual decoder tensor and chooses a compatible saved profile; otherwise it uses the established bundled path. A change of output resolution does not blindly reuse the previous resolution's winner. Compatible internal shapes can share a profile even when they come from different output resolutions. The launcher window does not need to remain open for this selection during an ordinary export.
 
-**Your tuning results carry forward.** Saved choices are reused when compatible. Stable measurements help order later searches, and a new shape is tested before a newly optimized choice is activated. Profiles are specific to the relevant GPU/software/tensor combination. Slower results are useful data too; unsuccessful compiled binaries are discarded. Disabling a profile keeps its record and affects newly started workers.
+**Your tuning results carry forward.** Saved choices are reused when compatible. Stable measurements help order later searches, and a new shape is tested before a newly optimized choice is activated. Profiles are specific to the relevant GPU/software/tensor combination. Completed search evidence and verified compiled artifacts can be reused even when a bundled choice wins. Unfinished candidates remain pending for a later matching preparation. Disabling a profile keeps its record and affects newly started workers.
 
-Fusion preparation rows gather these measurements; they deliberately have no export FPS. Turn off **Optimize** to skip preparation while keeping bundled Fusion. Bundled search has a 90-second operator-work budget; compilation has a five-minute search budget for selected demanding tensors, plus any final bounded compilation. The separate model request adds time. Scored rows keep fixed choices. An unavailable compiler falls back to bundled optimization.
+Fusion preparation rows gather these measurements; they deliberately have no export FPS. Turn off **Optimize** to skip preparation while keeping bundled Fusion. **Bundled kernels** allows up to **180 seconds (3 minutes)** of active optimization per preparation. **Compile variations** allows up to **900 seconds (15 minutes)** in total, including bundled search. These are ceilings: a search that finishes in 50 seconds does not wait for the remaining time. Ordinary model loading and video processing are separate from the optimization allowance, so the complete preparation can take longer. A candidate already underway may finish within a bounded two-minute grace. An unavailable compiler still permits bundled optimization.
+
+The result reports encountered workloads, completed or reused candidates, and anything left pending because of time, memory or compilation problems. These limits do not guarantee that every workload will finish on every computer. Saved compatible work reduces later preparation; a newly added candidate is recorded as new work. Increasing the allowance can add time when useful searches remain, but does not extend a search that is already finished. Scored rows keep fixed choices and do not optimize or compile.
+
+Comparison workspace means temporary memory used to compare a candidate kernel's output with its reference. The optimizer adapts the amount compared at once to actual free VRAM; it does not reduce your resolution, chunk size, tiles or output-check thresholds. Compiled choices still require complete output comparison and a separate speed confirmation. A growing library adds disk and indexing work, but does not make every historical compiled file another GPU search candidate.
 
 **Reading the library:** Native means ordinary decoder processing; Bundled means the included Fusion path; Local means a measured selection from included variants; Tailored means a validated variation compiled on your computer. Kernel gain measures one decoder operation, not the whole video. Combination Fusion gain compares the full settings with Fusion On and Off. Several tensor rows may share that same combination result. Hover over headings or press F1 for details.
 
