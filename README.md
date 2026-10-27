@@ -1,4 +1,7 @@
-CHECKOUT MY NEW APP, SKV89'S SLP MANAGER, WHICH HAS MANY ADDITIONAL FEATURES AT https://github.com/skv89/Topaz-SLP-Manager
+# **CHECKOUT MY NEW APP, SKV89'S SLP MANAGER, WHICH HAS MANY ADDITIONAL FEATURES AT**
+
+# **https://github.com/skv89/Topaz-SLP-Manager**
+
 
 # Topaz SLP Tuning Launcher v1.2.2
 
