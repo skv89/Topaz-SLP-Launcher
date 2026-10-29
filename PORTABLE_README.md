@@ -1,4 +1,4 @@
-# Topaz SLP Tuning Launcher v1.2.2
+# Topaz SLP Tuning Launcher v1.2.3
 
 1. Extract the portable ZIP to a writable folder and open **Topaz-SLP-Launcher.exe**.
 2. Detect/select your Topaz Video installation and choose a starting preset.
@@ -28,3 +28,4 @@ Requires Windows x64, supported Topaz Video with SLP 2.6, an NVIDIA CUDA GPU and
 Use the app's hover/F1 help, Guide, and Run history for support. **Refresh profiles** reloads existing records; AutoTune optimization creates them. Kernel timings are not whole-video FPS. Tune with short duplicate clips first; settings that fit one computer may not fit another. The unsigned app is independent community tooling, not endorsed by Topaz Labs or NVIDIA.
 
 [Full guide](README.md) · [Release notes](RELEASE_NOTES.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
+

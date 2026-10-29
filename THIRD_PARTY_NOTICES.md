@@ -17,3 +17,4 @@ Topaz Video and SLP are products of Topaz Labs. They are not bundled with this l
 The experimental BF16 decoder option includes GPU kernels compiled with Triton 3.3.1 (Triton for Windows 3.3.1.post19). Triton's MIT license is embedded as `licenses/Triton-MIT-LICENSE.txt`. The Triton compiler, CUDA toolkit and model weights are not bundled. The option uses the NVIDIA driver and a compatible native or optional launcher-selected PyTorch/CUDA runtime.
 
 The optional PyTorch 2.9.1 / CUDA 13.0 stack downloads pinned PyTorch, TorchVision, xFormers and Triton for Windows packages separately. These packages are not inside the launcher download. Their upstream license and notice files remain in the extracted package directories under `Topaz-SLP-Launcher-Data/pytorch-runtimes`. The launcher verifies the selected package hashes before use.
+

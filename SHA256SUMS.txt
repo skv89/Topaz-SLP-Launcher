@@ -1,2 +1,2 @@
-8d6a964a62cb6b91e49fc2a8fbe2db2c92ec195328bd2bab8d4128f84df5efc8  Topaz-SLP-Launcher.exe
-963ee7e72d802fe11d38478e02de06e53334cd66231362c0ac7a6eba9417f357  Topaz-SLP-Launcher-v1.2.2-portable.zip
+90fc5844e6466d7013e21d06448b58d956453ede9af9e97c497cf213f390b8d8  Topaz-SLP-Launcher.exe
+f5f56b92d4cdad0c2e39985de5c51c198d096764e311d0a848ac2c00896461cd  Topaz-SLP-Launcher-v1.2.3-portable.zip

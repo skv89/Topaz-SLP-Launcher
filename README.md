@@ -3,13 +3,19 @@
 # **https://github.com/skv89/Topaz-SLP-Manager**
 
 
-# Topaz SLP Tuning Launcher v1.2.2
+# Topaz SLP Tuning Launcher v1.2.3
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Published releases](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## New in v1.2.2 — Better Fusion searches, AutoTune fixes and CLI presets
+## New in v1.2.3 — AutoTune runtime preparation fix
+
+- **Fixes AutoTune runtime verification in deeply nested Windows folders.** Windows could report `cudnn_engines_runtime_compiled64_9.dll` as missing from a native cuDNN backup even when the file was present. This could prevent AutoTune from starting, especially after extracting the portable ZIP into a long folder path.
+- **Existing runtime data remains reusable.** The fix covers cuDNN backup verification, recovery, cached package preparation and restore without requiring a Windows long-path setting change. File-size and SHA-256 checks remain in place for genuinely missing or altered files.
+- **Keep your settings and Fusion collection.** Replace the launcher executable while retaining the adjacent `Topaz-SLP-Launcher-Data` folder. Saved presets, results, profiles and cached runtimes are preserved.
+
+## Previously in v1.2.2 — Better Fusion searches, AutoTune fixes and CLI presets
 
 - **More time for useful Fusion optimization.** **Bundled kernels** allows up to **3 minutes** of active optimization per preparation. **Compile variations** allows up to **15 minutes**, including that same bundled search plus compiling and testing additional variations. Ordinary model loading and video processing no longer use up the search allowance.
 - **Completed work carries forward.** Later matching preparations reuse compatible completed checks and verified compiled kernels. If time, memory or a compiler problem leaves candidates unfinished, they remain pending for a later matching run. A newly added candidate is treated as new work.
@@ -290,3 +296,4 @@ The app is unsigned, so Windows may show an unknown-publisher warning. Download 
 [License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 The **Fusion** page explains an empty local library and links directly to bundled measurements. Local profiles are created by the optional final-combination optimization stage; **Refresh profiles** only reloads existing profiles. Bundled rows summarize complete comparisons at 12 resolutions. **Details** shows the tested tile/chunk settings and separate tensor coverage; it does not imply every possible combination received a full-video test.
+
