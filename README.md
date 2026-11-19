@@ -3,13 +3,21 @@
 # **https://github.com/skv89/Topaz-SLP-Manager**
 
 
-# Topaz SLP Tuning Launcher v1.2.3
+# Topaz SLP Tuning Launcher v1.2.4
 
 Tune Topaz Video SLP 2.6, compare performance on your computer, and watch memory use while videos process—all from one portable Windows app.
 
 [Published releases](https://github.com/skv89/Topaz-SLP-Launcher/releases/latest) · [Report a problem](https://github.com/skv89/Topaz-SLP-Launcher/issues)
 
-## New in v1.2.3 — AutoTune runtime preparation fix
+## New in v1.2.4 — Custom quick tests and low-RAM warnings
+
+- **Run a short test with your own rows.** Choose **Custom quick** to test individual settings or complete combinations in table order. Each row runs one chunk. You can save a suite, reopen a previous run, and include two runtime baseline rows for comparison.
+- **Start AutoTune in one click.** **Start AutoTune** refreshes the full plan when needed and starts the run. Use **Create / refresh plan** to preview the rows. Previous results stay in **Run history**.
+- **Compare runtimes with the same cuDNN version.** The **cuDNN only test** accepts matching cuDNN versions. Each runtime uses the package made for its CUDA family. This lets you compare PyTorch/CUDA stacks at the same cuDNN version.
+- **Keep testing through low physical RAM.** After ten continuous seconds below 1 GiB available, AutoTune warns that Windows may move data between RAM and disk and slow the test. The run continues while the warning is open. You can dismiss it or stop the run and keep completed results.
+- **See what happened in a run.** AutoTune shows the cause of a safety stop and identifies the run and PID when it cannot verify that an earlier worker exited. Completed runs with matching evidence can stay in history without blocking a new run. Combination rows also show the VAE temporal micro-batch they tested.
+
+## Previously in v1.2.3 — AutoTune runtime preparation fix
 
 - **Fixes AutoTune runtime verification in deeply nested Windows folders.** Windows could report `cudnn_engines_runtime_compiled64_9.dll` as missing from a native cuDNN backup even when the file was present. This could prevent AutoTune from starting, especially after extracting the portable ZIP into a long folder path.
 - **Existing runtime data remains reusable.** The fix covers cuDNN backup verification, recovery, cached package preparation and restore without requiring a Windows long-path setting change. File-size and SHA-256 checks remain in place for genuinely missing or altered files.
@@ -61,7 +69,7 @@ These collection and AutoTune features were introduced in v1.2.0.
 
 ## Getting started
 
-1. Download **Topaz-SLP-Launcher.exe**, or extract the portable ZIP into a writable folder. Open the EXE.
+1. For a new installation, extract **Topaz-SLP-Launcher-v1.2.4-portable.zip** into a writable folder and open **Topaz-SLP-Launcher.exe**.
 2. Detect & select the **Topaz Video** location.
 3. Choose **Conservative Starting Point**, or **Stock Topaz** for no tuning overrides. Running Autotune is recommended.
 4. Click **Launch Topaz**, then start an SLP export normally in Topaz.
@@ -75,7 +83,7 @@ To return to an older version, restore its matching EXE and data-folder backup. 
 
 ![Settings and runtime management](docs/screenshots/settings.png)
 
-Screenshots show an example computer, not recommended settings for every GPU. Settings, AutoTune and bundled Fusion views are captured from v1.2.0; Fusion optimization help is captured from v1.2.2; Check and repair Fusion is captured from v1.2.2 after its optional short test. The restored AutoTune tables retain an earlier run, including its original reference rows; they do not represent a new v1.2.0 benchmark. Other images illustrate unchanged features.
+Screenshots show an example computer. Settings, AutoTune and bundled Fusion views are captured from v1.2.0. Fusion optimization help and Check and repair Fusion are captured from v1.2.2. The restored AutoTune tables show their original reference rows and measurements. The low-RAM warning shows an example reading from v1.2.4.
 
 ## Try experimental BF16 Fusion
 
@@ -116,9 +124,9 @@ AutoTune offers separate **Baseline PyTorch/CUDA + cuDNN** and **Upgraded PyTorc
 
 ## Find settings for your computer
 
-Open **Benchmark / System AutoTune**, choose your output resolution and **Standard** mode, then click **Create / refresh plan**. The built-in adaptive suite uses your installed memory and selected output dimensions to generate its setting tests before the run. It does not require previous results or a preliminary benchmark. Saved custom suites keep your edits.
+Open **Benchmark / System AutoTune** and choose your output resolution and **Standard** mode. The built-in adaptive suite uses your installed memory and selected output dimensions to generate its setting tests before the run. It does not require previous results or a preliminary benchmark. Saved custom suites keep your edits.
 
-Add, edit or remove tests if desired and save your suite. Prepare the selected runtimes if prompted, then start AutoTune.
+Use **Create / refresh plan** to preview, edit or save your suite. Click **Start AutoTune** to start the full run. It refreshes the plan if needed and keeps previous results in history. Follow any runtime or compatibility prompts before processing begins.
 
 Leave Topaz open and idle, disconnect from the internet, keep the hardware running cool by leaving open windows, using AC, or running with an open case, and avoid using the computer during AutoTune as I found even light computer use such as typing documents or web browsing without videos can affect the performance significantly. Keep in mind individual-setting rows test a single parameter tweak, while custom-combination rows test all selected changes together. A result might differ by only a few percentage points; but if outside factors distorts the performance by a few percent, then the AutoTune results might not be reliable or useful. Saved tables remain available for reference; they do not resume processing.
 
@@ -142,7 +150,11 @@ The plan shows the later combination steps immediately. Their settings and clip 
 
 Fusion-enabled AutoTune adds reference and comparison rows, so it can take longer. Results are specific to your computer and test clip; they do not establish the fastest possible settings for every export.
 
-**Quick runtime comparison:** choose **cuDNN only test**. Checking **BF16 Fusion** adds a third row: selected baseline with Native processing, upgraded runtime with Native processing, and upgraded runtime with BF16 Fusion. All rows use the same baseline SLP settings. Uncheck Fusion for two rows. This mode compares runtimes and Fusion without optimizing kernels or deriving presets.
+**Quick runtime comparison:** choose **cuDNN only test**. Select the same cuDNN version in both columns and a compatible package for each runtime’s CUDA family to compare PyTorch/CUDA stacks at that version. Two rows use Native processing. Checking **BF16 Fusion** adds a third row on the upgraded runtime with Fusion. All rows use the same baseline SLP settings. This mode compares runtimes and Fusion without optimizing kernels or deriving presets.
+
+### Custom quick
+
+Choose **Custom quick** and use **Add row or combination** to enter the tests you want. Each row runs once, for one chunk, in table order. FPS includes warm-up. Use **Save suite** to keep the rows as a named suite. **Include baseline comparison** adds one Native decoder reference on each selected runtime. Custom quick reports the measured rows and comparisons without deriving automatic preset recommendations.
 
 ### Test your own combination
 
@@ -150,7 +162,7 @@ Choose **Add row or combination**, select a combination and enter its settings. 
 
 Use Ctrl or Shift to select several setting-test rows, then press Delete or choose **Remove selected rows**. One Ctrl+Z restores the entire removed group. Required baseline and reference rows remain protected. Removing all setting tests also clears the automatic combination steps.
 
-To compare just a few ideas, select those rows and choose **Run selected tests** from the arrow beside **Start AutoTune**. The launcher includes the required Topaz and upgraded-cuDNN baseline comparisons automatically. This works on the first run; you do not need to finish a full suite or delete other rows. The normal **Start AutoTune** action still runs the full plan.
+To compare just a few ideas, select those rows and choose **Run selected tests** from the arrow beside **Start AutoTune**. Standard and Extended add the required baseline comparisons and retain the displayed run’s recorded memory buffers. Custom quick follows its optional baseline setting. The normal **Start AutoTune** action runs the full plan.
 
 Custom combinations use the same live memory safeguards. Their measured results are treated as complete combinations, not as separate gains to add to other settings. A user-selected combination is not automatically a validated preset recommendation.
 
@@ -165,24 +177,29 @@ If a runtime cannot start, AutoTune stops before the benchmark rows and saves th
 
 In **Standard** and **Extended**, AutoTune combines successfully tested settings and ranks the choices by predicted speed. Each choice must fit **both** the VRAM and system RAM buffers for its preset. Aggressive and conservative use their own limits. The isolated setting suite is not run again.
 
+Combination rows display the actual **VAE temporal micro-batch**. Automatic combinations consider measured values of 4, 8 and 12. With an unlimited VAE operator cap, automatic combinations use a micro-batch of 4.
+
 **Standard** stops at the first qualifying result per preset, retrying failures up to three attempts. It uses the end-of-individual-tests reference without extra combination baseline runs. **Extended** compares up to three candidates per preset, even if the first qualifies, and chooses the fastest qualifying result. Extended keeps nearby comparison references. Both modes test each individual setting once, retain three full chunks per scored row, and support optional **Bundled kernels** or **Compile variations** optimization plus final Fusion On/Off comparisons. Historical Thorough results retain their original three repetitions; new plans use Extended. **Complete** means rendering finished. A **RAM/VRAM buffer not met** label explains why a completed candidate cannot qualify for that preset. A successful conservative choice can also serve as the aggressive fallback. Only eligible tested results can be saved as recommendations. Hover over either Save preset button, or focus it and press **F1**, for the selection explanation and a table of the tested recommendation and up to two calculated alternatives. Calculated gains and memory totals are estimates; the alternatives are for information and are not saved by those buttons. The help identifies the capacities and buffers recorded for that run and flags differences from current hardware or edited inputs. It shows the winner's measured memory peaks separately from estimates. Older results are not recalculated when the inputs change.
 
 The aggressive buffer fields accept decimal percentages from **0% up to the conservative buffer**. Press Enter or leave the field to commit an edit: a number above the limit becomes the limit, and a negative number becomes zero. Blank or nonnumeric entries return to the last valid value.
 
-| Installed capacity | Recommended aggressive VRAM free | Conservative VRAM free | Recommended aggressive RAM free | Conservative RAM free |
+| Detected capacity | Aggressive VRAM free by default | Conservative VRAM free | Aggressive RAM free by default | Conservative RAM free |
 |---|---:|---:|---:|---:|
-| 16 GB and below | 7% | 15% | 12% | 20% |
-| 24 GB | 7% | 15% | 12% | 20% |
-| 32 GB | 7% | 15% | 12% | 25% |
-| Above 32 GB | 10% | 20% | 12% | 30% |
+| Up to 24.5 GiB | 7% | 15% | 12% | 20% |
+| Over 24.5 through 32.5 GiB | 7% | 15% | 12% | 25% |
+| Over 32.5 GiB | 10% | 20% | 12% | 30% |
 
-VRAM and system RAM use their **own installed capacities** to select a row. Percentages reserve space from total memory, including Windows, Topaz and other applications. A real Topaz export can use more memory than the idle Topaz interface used during AutoTune; leave a larger buffer if needed. Lower buffers increase out-of-memory risk. Changing these fields affects new plans, not older saved results.
+VRAM and system RAM use their **own detected capacities**. For example, a Conservative combination on a system with 32 GiB of RAM targets 8 GiB available. Windows, Topaz and other applications share the remaining 24 GiB. The percentages apply to preset qualification and combination validation. Baseline and individual test rows can still complete and report FPS when they exceed a preset’s budget. A real export can use more memory than an AutoTune test with the Topaz interface idle.
 
 Candidate tests that stop reporting render progress are stopped automatically after at least **20 minutes**, with a longer allowance when successful baseline timing warrants it. Overall test deadlines remain finite. Baseline and model-loading phases have separate safeguards.
 
-When a test reaches a memory safety limit, AutoTune stops that test and checks that its worker has closed and memory has recovered before advancing. An optional Topaz comparison may be skipped after recovery; comparisons with that missing baseline are then unavailable. The **upgraded baseline** is required to compare setting changes, so AutoTune stops if that reference cannot finish. Persistent memory pressure, missing required GPU readings, or unverified cleanup also stop the run and preserve completed results. Lowering a preset's free-memory buffer does not disable these safeguards.
+### Low-RAM warning and safety stops
 
-A **RAM safety stop** means free physical system memory fell below the safety floor. A **commit safety stop** means Windows had too little remaining memory-commit capacity (backed by RAM and the pagefile). Commit can run low while the displayed physical RAM and VRAM still have room. Hover over a stopped result for the recorded values; closing memory-heavy applications or allowing more Windows-managed pagefile space may help.
+AutoTune shows a warning after **10 continuous seconds below 1 GiB of available physical RAM**. Windows may move data between RAM and disk, slowing the test. **Keep running** dismisses the warning, and **Stop AutoTune** cancels the run and retains completed results. With the warning left open, the run continues by default. The final status flags the low RAM and **Monitor / FPS → Live log** records the time, available RAM and active row when there is one.
+
+![AutoTune low-RAM warning with 0.50 GiB available and options to keep running or stop](docs/screenshots/autotune-low-ram-warning.png)
+
+A **commit safety stop** occurs if Windows has less than 8 GiB of allocation capacity remaining across RAM and the pagefile. AutoTune also checks for GPU-memory spill, out-of-memory errors and stalled processing. After a safety stop, AutoTune verifies the worker has exited and the memory readings have stabilized before moving on. It can skip an optional Topaz comparison after recovery. A failed required upgraded baseline ends the run with completed results available. Hover over a stopped result for the recorded values. Older runs can show a **RAM safety stop** from the reserve used at the time.
 
 Extended can reuse a recent comparable reference after brief memory failures; Standard uses its completed end-of-individual-tests reference. On eligible high-resolution systems, the adaptive plan can add a modest **161-frame chunk** test even when its initial memory estimate excludes larger chunks. That row still has to pass the same memory safeguards.
 
@@ -269,7 +286,7 @@ Graphs reuse the existing monitor readings. Each new SLP file replaces the previ
 
 Open **Run history…**:
 
-- **Restore to table**: select one run to view its saved plan and results in the main GUI. Completed, failed and untested rows retain their original status. Restoring preserves the previous table and does not apply settings or resume processing. A new full AutoTune run refreshes its plan for review before starting.
+- **Restore to table**: select one run to view its saved plan and results in the main GUI. Completed, failed and untested rows retain their original status. Restoring preserves the previous table and does not apply settings or resume processing. **Start AutoTune** refreshes the plan and starts a new run. **Create / refresh plan** previews it.
 - **Export selected diagnostics…**: select the AutoTune runs you need help with. The ZIP includes runtime startup outcomes, native and upgraded cuDNN inventory metadata, test results, per-row logs and the launcher's recent log. GPU identity and counter-readiness diagnostics help explain missing telemetry. New runs also retain compact resource history and separate first-chunk/later-chunk timings. All rows are considered; failed, warning-bearing and unusually slow rows receive priority within the archive limits. The manifest identifies missing, truncated or omitted files. Older runs cannot supply measurements that were never recorded.
 - **App support ZIP…**: use this for a general launcher problem—for example, an error when opening Topaz. No run selection is needed.
 - **Delete selected…**: remove selected saved runs after reviewing the size and confirming.

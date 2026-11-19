@@ -1,4 +1,4 @@
-# Topaz SLP Tuning Launcher v1.2.3
+# Topaz SLP Tuning Launcher v1.2.4
 
 1. Extract the portable ZIP to a writable folder and open **Topaz-SLP-Launcher.exe**.
 2. Detect/select your Topaz Video installation and choose a starting preset.
@@ -9,9 +9,15 @@
 
 **AutoTune:** Standard derives both conservative and aggressive presets and stops at the first qualifying combination per preset, retrying failures up to three attempts. Extended compares up to three candidates per preset even after a success. Both test the individual matrix once, support optional optimization/compilation, and compare both final combinations with Fusion On/Off when Fusion is enabled. Keep Topaz open and idle during AutoTune and avoid other GPU work.
 
+**Start a run.** **Start AutoTune** refreshes the plan as needed and begins. **Create / refresh plan** is for previewing it. Previous results stay in **Run history**.
+
+**Custom quick.** Add individual settings or full combinations. Each row runs one chunk in table order. Choose **Include baseline comparison** to add one Native decoder reference on each runtime.
+
+**Low physical RAM.** After ten continuous seconds below 1 GiB available, AutoTune warns that disk paging may slow the test. Testing continues while the warning is open. **Keep running** dismisses it, and **Stop AutoTune** cancels and keeps completed results. The final status and live log flag the low RAM. Windows commit and preset memory budgets still apply.
+
 **AutoTune startup:** leftover default model/authentication folders from another Topaz product no longer override the selected installation. Custom model locations are preserved. If startup fails, export that run's diagnostics from **Run history**; see the [Command-line guide](CLI_USAGE.md#model-folders-and-autotune-startup-errors).
 
-**Quick comparison:** choose **cuDNN only test**. Check **BF16 Fusion** for three rows: selected baseline with Native, upgraded runtime with Native, and upgraded runtime with Fusion. All use the same baseline SLP settings. Uncheck Fusion for two rows. This mode does not optimize kernels or derive presets.
+**Quick runtime comparison.** Choose **cuDNN only test**. You can use the same cuDNN version on each runtime with the build made for its CUDA family. Two rows use Native processing. Check **BF16 Fusion** to add a third row on the upgraded runtime with Fusion. All rows use the same SLP settings.
 
 **Fusion:** supported Blackwell/sm120 GPUs can choose BF16 Fusion under Decoder processing. Native remains the default. Enable Optimize in AutoTune to grow your local library. **Bundled kernels** tests included choices; **Compile variations** includes that same search and also compiles/tests new variations. It can keep a bundled winner. New compiled winners require output checks and a separate speed confirmation. Normal exports never compile. More relevant data can improve the chance of finding faster choices, but cannot guarantee another export-speed gain.
 
